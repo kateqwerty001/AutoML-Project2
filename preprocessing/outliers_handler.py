@@ -6,7 +6,7 @@ class OutliersHandler:
     A class which handles the outliers in the dataset.(we consider only numerical features here) using the Z score method.)
     '''
     def __init__(self, dataset):
-        self.dataset = dataset
+        self.dataset = dataset.copy()
         self.TO_DELETE_ROWS_THRESHOLD = 0.001 # If the fraction of rows with outliers is less than this value, we delete the rows, otherwise we fill the outliers with the median value.
         self.DO_NOTHING_THRESHOLD = 0.005 # If the fraction of rows with outliers is more than this value, we do nothing, we dont consider these values as outliers.
         # if the fraction of rows with outliers is between the two thresholds, we fill the outliers with the median value.
@@ -18,7 +18,7 @@ class OutliersHandler:
         feature_type_extractor = FeatureTypeExtractor()
 
         for feature in self.dataset.columns:
-            feature_type = feature_type_extractor.get_feature_type(self.dataset[feature], self.dataset)
+            feature_type = feature_type_extractor.get_feature_type(feature, self.dataset)
             if feature_type == feature_type_extractor.DISCRETE or feature_type == feature_type_extractor.CONTINIOUS:
 
                 # apply the Z score method to find the outliers number
