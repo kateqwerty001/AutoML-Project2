@@ -151,7 +151,7 @@ class FeatureTypeExtractor:
         Returns:
             - the encoded target column.
         '''
-        pd.set_option('future.no_silent_downcasting', True)
+
         replace_dict = {}
 
         for i, target in enumerate(dataset[target_column_name].unique()):
