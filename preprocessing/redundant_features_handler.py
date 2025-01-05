@@ -12,7 +12,7 @@ class RedundantFeaturesHandler:
         self.dataset = dataset.copy()
         self.to_delete = set()
 
-    def handle(self):
+    def fit_transform(self):
         for feature in self.dataset.columns:
             
             feature_type = FeatureTypeExtractor().get_feature_type(feature, self.dataset)

@@ -13,7 +13,7 @@ class MissingValuesHandler:
     def __init__(self, dataset):
         self.dataset = dataset.copy()
 
-    def handle(self):
+    def fit_transform(self):
         '''
         Fills the missing values in the dataset.
         '''

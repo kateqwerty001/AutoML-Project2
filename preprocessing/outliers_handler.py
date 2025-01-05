@@ -11,7 +11,7 @@ class OutliersHandler:
         self.DO_NOTHING_THRESHOLD = 0.005 # If the fraction of rows with outliers is more than this value, we do nothing, we dont consider these values as outliers.
         # if the fraction of rows with outliers is between the two thresholds, we fill the outliers with the median value.
 
-    def handle(self):
+    def fit_transform(self):
         '''
         Handles the outliers in numerical features in the dataset.
         '''

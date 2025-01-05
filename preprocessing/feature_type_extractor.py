@@ -186,3 +186,17 @@ class FeatureTypeExtractor:
                 dataset = dataset.drop(columns=[feature])
 
         return dataset
+    
+    def bool_to_int(self, dataset):
+        '''
+        Converts the boolean features to int.
+        Args:
+            - dataset - the dataset, which has the boolean features.
+        Returns:
+            - the dataset with the boolean features converted to int.
+        '''
+        for feature in dataset.columns:
+            if dataset[feature].dtype == 'bool':
+                dataset[feature] = dataset[feature].astype(int)
+                
+        return dataset

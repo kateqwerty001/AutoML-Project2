@@ -29,21 +29,24 @@ class DataPreprocessor:
         self.dataset = FeatureTypeExtractor().separate_datetime(self.dataset)
 
         print('---------------Deleting redundant features--------------')
-        self.dataset = RedundantFeaturesHandler(self.dataset).handle()
+        self.dataset = RedundantFeaturesHandler(self.dataset).fit_transform()
 
         print('---------------Handling missing values------------------')
-        self.dataset = MissingValuesHandler(self.dataset).handle()
+        self.dataset = MissingValuesHandler(self.dataset).fit_transform()
 
         print('---------------Handling outliers------------------------')
-        self.dataset = OutliersHandler(self.dataset).handle()
+        self.dataset = OutliersHandler(self.dataset).fit_transform()
 
         print('---------------1. Encoding categorical features ------')
         self.dataset = FeatureTypeExtractor().encode_categorical(self.dataset, self.target_column_name)
 
+        print('---------------Transforming boolean features to int--------------')
+        self.dataset = FeatureTypeExtractor().bool_to_int(self.dataset)
+
         print('---------------2. Min max scaling --------------------')
         self.dataset = FeatureTypeExtractor().min_max_scale(self.dataset, self.target_column_name)
 
-        print('---------------3. Encoding of target------------')
+        print('---------------3. Encode the target------------')
         self.dataset = FeatureTypeExtractor().encode_target(self.dataset, self.target_column_name)
 
         X = self.dataset.drop(self.target_column_name, axis=1)
