@@ -1,0 +1,107 @@
+\documentclass{article}%
+\usepackage[T1]{fontenc}%
+\usepackage[utf8]{inputenc}%
+\usepackage{lmodern}%
+\usepackage{textcomp}%
+\usepackage{lastpage}%
+\usepackage{graphicx}%
+%
+\title{Report created by ... Library on '1464' dataset}%
+%
+\begin{document}%
+\normalsize%
+\maketitle%
+\section{Dataset Information}%
+\label{sec:DatasetInformation}%
+\subsection{DataTypes and Non{-}Null Count}%
+\label{subsec:DataTypesandNon{-}NullCount}%
+
+
+\begin{table}[h!]%
+\caption{Dataset Columns Information}%
+\vspace{0.2cm}%
+\centering%
+\begin{tabular}{|c|c|c|}%
+\hline%
+Column&Non{-}Null Count&Dtype\\%
+\hline%
+V1&748&uint8\\%
+V2&748&uint8\\%
+V3&748&float64\\%
+V4&748&uint8\\%
+target&748&int64\\%
+\hline%
+\end{tabular}%
+\end{table}
+
+%
+\subsection{Descriptive Statistics}%
+\label{subsec:DescriptiveStatistics}%
+
+
+\begin{table}[h!]%
+\caption{Dataset Descriptive Statistics}%
+\vspace{0.2cm}%
+\centering%
+\begin{tabular}{|c|c|c|c|c|c|c|c|c|}%
+\hline%
+Statistic&count&mean&std&min&25\%&50\%&75\%&max\\%
+\hline%
+V1&748.0&9.51&8.1&0.0&2.75&7.0&14.0&74.0\\%
+V2&748.0&5.51&5.84&1.0&2.0&4.0&7.0&50.0\\%
+V3&748.0&1378.68&1459.83&250.0&500.0&1000.0&1750.0&12500.0\\%
+V4&748.0&34.28&24.38&2.0&16.0&28.0&50.0&98.0\\%
+target&748.0&0.24&0.43&0.0&0.0&0.0&0.0&1.0\\%
+\hline%
+\end{tabular}%
+\end{table}
+
+%
+\subsection{Histograms for Numerical Columns}%
+\label{subsec:HistogramsforNumericalColumns}%
+
+
+\begin{figure}[h!]%
+\centering%
+\includegraphics[width=200px]{eda/histograms/V1_histogram.png}%
+\caption{Histogram of V1}%
+\end{figure}
+
+%
+
+
+\begin{figure}[h!]%
+\centering%
+\includegraphics[width=200px]{eda/histograms/V2_histogram.png}%
+\caption{Histogram of V2}%
+\end{figure}
+
+%
+
+
+\begin{figure}[h!]%
+\centering%
+\includegraphics[width=200px]{eda/histograms/V3_histogram.png}%
+\caption{Histogram of V3}%
+\end{figure}
+
+%
+
+
+\begin{figure}[h!]%
+\centering%
+\includegraphics[width=200px]{eda/histograms/V4_histogram.png}%
+\caption{Histogram of V4}%
+\end{figure}
+
+%
+
+
+\begin{figure}[h!]%
+\centering%
+\includegraphics[width=200px]{eda/histograms/target_histogram.png}%
+\caption{Histogram of target}%
+\end{figure}
+
+%
+\end{document}
