@@ -4,7 +4,8 @@ from pylatex.table import Table
 import pandas as pd
 import io
 import matplotlib.pyplot as plt
-import io
+import os
+import seaborn as sns
 from pylatex import Section, Subsection, Figure, NoEscape
 
 class ReportGenerator:
@@ -46,8 +47,9 @@ class ReportGenerator:
                 dtype = parts[-1]
                 table_rows.append([column_name, non_null_count, dtype])
 
-        with self.doc.create(Section('Dataset Information')):
+        with self.doc.create(Section('Exploratory Data Analysis Part')):
             with self.doc.create(Subsection('DataTypes and Non-Null Count')):
+                self.doc.append(NoEscape(r'Information is in table 1'))
                 # Create the table with a caption 
                 with self.doc.create(Table(position='h!')) as table:
                     table.add_caption('Dataset Columns Information')
@@ -76,6 +78,7 @@ class ReportGenerator:
             table_rows = describe_data.values.tolist()
 
             with self.doc.create(Subsection('Descriptive Statistics')):
+                self.doc.append(NoEscape(r'Information is in table 2'))
                 # Create the table with a caption 
                 with self.doc.create(Table(position='h!')) as table:
                     table.add_caption('Dataset Descriptive Statistics')
@@ -99,12 +102,16 @@ class ReportGenerator:
     def add_correlation_matrix(self):
         '''
         This method adds a table with the dataset's correlation matrix
+
+        Not sure if we need this
         '''
         pass
     
     def add_scatter_plots(self):
         '''
         This method adds scatter plots for columns in the dataset
+
+        Not sure if we need this
         '''
         pass
 
@@ -112,48 +119,100 @@ class ReportGenerator:
         '''
         This method adds bar charts for each categorical column in the dataset
         '''
-        pass
+        import os
+        import seaborn as sns
+        import matplotlib.pyplot as plt
+
+        categorical_columns = []
+        for column in self.dataset.columns:
+            if (self.dataset[column].dtype == 'object' and self.dataset[column].nunique() < 10) or (self.dataset[column].dtype == 'category' and self.dataset[column].nunique() < 10) or (self.dataset[column].dtype == 'bool'):
+                categorical_columns.append(column)
+
+        if len(categorical_columns) == 0:
+            return
+        
+        # Ensure the directory exists
+        os.makedirs('eda/bar_charts', exist_ok=True)
+
+        with self.doc.create(Subsection('Bar Charts for Categorical Columns and Histograms for Numerical Columns')):
+            for column in categorical_columns:
+                plt.figure(figsize=(12, 6))
+                # Set larger font sizes for titles and labels
+                plt.title(f'Bar Chart for {column}', fontsize=20)
+                plt.xlabel(column, fontsize=18)
+                plt.ylabel('Count', fontsize=18)
+
+                # Plot the bar chart with Seaborn
+                sns.countplot(data=self.dataset, x=column, color="#581845", edgecolor='black', order=self.dataset[column].value_counts().index)
+
+                # Set tick label font size
+                plt.xticks(fontsize=16)
+                plt.yticks(fontsize=16)
+
+                # Save the bar chart
+                image_path = f'eda/bar_charts/{column}_bar_chart.png'
+                plt.savefig(image_path)
+                plt.close()
+
+                # Include the image in the LaTeX document
+                with self.doc.create(Figure(position='h!')) as fig:
+                    fig.add_image(image_path, width='200px')
+                    fig.add_caption(f'Bar Chart of {column}')
+
 
     def add_histograms(self):
-            '''
-            This method adds histograms for each numerical column in the dataset
-            '''
-            with self.doc.create(Subsection('Histograms for Numerical Columns')):
-                # find numerical columns
-                numerical_columns = []
-                for column in self.dataset.columns:
-                    if str(self.dataset[column].dtype).find('int') or str(self.dataset[column].dtype).find('float'):
-                        numerical_columns.append(column)
+        '''
+        This method adds histograms for each numerical column in the dataset
+        '''
+        numerical_columns = []
+        for column in self.dataset.columns:
+            if str(self.dataset[column].dtype).find('int')!=-1 or str(self.dataset[column].dtype).find('float')!=-1:
+                numerical_columns.append(column)
 
-                for column in numerical_columns:
-                    # Create a histogram for the column
-                    plt.figure(figsize=(10, 6))
-                    self.dataset[column].plot(kind='hist', bins=20, color='#C70039', edgecolor='black')
-                    plt.title(f'Histogram for {column}')
-                    plt.xlabel(column)
-                    plt.ylabel('Frequency')
-                    
-                    # Save the histogram
-                    image_path = f'eda/histograms/{column}_histogram.png'
-                    plt.savefig(image_path)
-                    plt.close()
+        if len(numerical_columns) == 0:
+            return
 
-                    # Include the image in the LaTeX document
-                    with self.doc.create(Figure(position='h!')) as fig:
-                        fig.add_image(image_path, width='200px')
-                        fig.add_caption(f'Histogram of {column}')
+        # find numerical columns
+        for column in numerical_columns:
+            # Create a histogram for the column
+            plt.figure(figsize=(12, 6))
+            self.dataset[column].plot(kind='hist', bins=20, color='#C70039', edgecolor='black')
+            plt.title(f'Histogram for {column}', fontsize=16)
+            plt.xlabel(column, fontsize=18)
+            plt.ylabel('Frequency', fontsize=18)
 
+            plt.xticks(fontsize=16)
+            plt.yticks(fontsize=16)
+            
+            # Save the histogram
+            image_path = f'eda/histograms/{column}_histogram.png'
+            plt.savefig(image_path)
+            plt.close()
+
+            # Include the image in the LaTeX document
+            with self.doc.create(Figure(position='h!')) as fig:
+                fig.add_image(image_path, width='200px')
+                fig.add_caption(f'Histogram of {column}')
+                        
 
     def generate_report(self):
         '''
         This method generates the report
         '''
         self.add_title()  # Add the title to the report
+
         self.add_info_table()  # Add dataset info() table
+
+        self.doc.append(NoEscape(r'\newpage'))
         self.add_describe_info()  # Add dataset describe() table
+
+        self.doc.append(NoEscape(r'\newpage'))
+        self.add_bar_charts()  # Add bar charts for categorical columns
+
         # self.add_correlation_matrix()
-        # self.add_bar_charts()
         # self.add_scatter_plots()
+
         self.add_histograms()
+        
         self.doc.generate_pdf('report', clean_tex=False)
 
