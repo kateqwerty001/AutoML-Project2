@@ -1,11 +1,11 @@
-from RandomForestRandomSearch import RandomForestRandomSearch
-from XGBoostRandomSearch import XGBoostRandomSearch
-from DecisionTreeRandomSearch import DecisionTreeRandomSearch
+from .models.random_forest_random_search import RandomForestRandomSearch
+from .models.xgboost_random_search import XGBoostRandomSearch
+from .models.decision_tree_random_search import DecisionTreeRandomSearch
 from sklearn.model_selection import train_test_split
 from sklearn.metrics import roc_auc_score, accuracy_score, f1_score
 import pandas as pd
 
-class All_models_analysis:
+class OptimizerAllModels:
     def __init__(self, dataset, test_size=0.2, random_state=42, n_iter=10, cv=5, n_repeats=5, metric_to_eval = 'roc_auc'):
         """
         Initialize the Fit_all_models class.
@@ -56,7 +56,7 @@ class All_models_analysis:
             n_repeats: Number of times to repeat cross-validation for stability.
         """
 
-          # Use the DecisionTreeClassifierRandomSearch class
+        # Use the DecisionTreeClassifierRandomSearch class
         tuner_decision_tree = DecisionTreeRandomSearch(
             dataset=pd.concat([self.X_train, self.y_train], axis=1),
             n_iter=n_iter,
