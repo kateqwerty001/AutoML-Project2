@@ -19,7 +19,7 @@ class ReportGenerator:
         '''
         This method adds a title to the report
         '''
-        self.doc.preamble.append(Command('title', "Report created by ... Library on '" + self.dataset_name + "' dataset"))
+        self.doc.preamble.append(Command('title', "Report created by Auto2Class on '" + self.dataset_name + "' dataset"))
         self.doc.append(NoEscape(r'\maketitle'))
 
 
@@ -132,7 +132,7 @@ class ReportGenerator:
             return
         
         # Ensure the directory exists
-        os.makedirs('eda/bar_charts', exist_ok=True)
+        os.makedirs('EDA/bar_charts', exist_ok=True)
 
         with self.doc.create(Subsection('Bar Charts for Categorical Columns and Histograms for Numerical Columns')):
             for column in categorical_columns:
@@ -150,7 +150,7 @@ class ReportGenerator:
                 plt.yticks(fontsize=16)
 
                 # Save the bar chart
-                image_path = f'eda/bar_charts/{column}_bar_chart.png'
+                image_path = f'EDA/bar_charts/{column}_bar_chart.png'
                 plt.savefig(image_path)
                 plt.close()
 
@@ -171,6 +171,9 @@ class ReportGenerator:
 
         if len(numerical_columns) == 0:
             return
+        
+        # Ensure the directory exists
+        os.makedirs('EDA/histograms', exist_ok=True)
 
         # find numerical columns
         for column in numerical_columns:
@@ -185,7 +188,7 @@ class ReportGenerator:
             plt.yticks(fontsize=16)
             
             # Save the histogram
-            image_path = f'eda/histograms/{column}_histogram.png'
+            image_path = f'EDA/histograms/{column}_histogram.png'
             plt.savefig(image_path)
             plt.close()
 
