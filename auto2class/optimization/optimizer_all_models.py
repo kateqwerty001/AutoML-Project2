@@ -6,7 +6,7 @@ from sklearn.metrics import roc_auc_score, accuracy_score, f1_score
 import pandas as pd
 
 class OptimizerAllModels:
-    def __init__(self, dataset, test_size=0.2, random_state=42, n_iter=10, cv=5, n_repeats=5, metric_to_eval = 'roc_auc'):
+    def __init__(self, dataset, test_size=0.2, random_state=42, n_iter=10, cv=5, n_repeats=1, metric_to_eval = 'roc_auc'):
         """
         Initialize the Fit_all_models class.
 
@@ -45,7 +45,7 @@ class OptimizerAllModels:
 
         self.params_xgb = None
 
-    def tune_hyperparameters(self, n_iter=10, cv=5, random_state=42, n_repeats=5):
+    def tune_hyperparameters(self):
         """
         Perform hyperparameter tuning using DecisionTreeClassifierRandomSearch/RandomForestClassifier/XGBoostClassifier.
 
@@ -59,10 +59,10 @@ class OptimizerAllModels:
         # Use the DecisionTreeClassifierRandomSearch class
         tuner_decision_tree = DecisionTreeRandomSearch(
             dataset=pd.concat([self.X_train, self.y_train], axis=1),
-            n_iter=n_iter,
-            cv=cv,
-            random_state=random_state,
-            n_repeats=n_repeats
+            n_iter=self.n_iter,
+            cv=self.cv,
+            random_state=self.random_state,
+            n_repeats=self.n_repeats
         )
 
         # Use the RandomForestRandomSearch class
@@ -86,10 +86,13 @@ class OptimizerAllModels:
 
         # Perform hyperparameter optimization using RandomSearch
 
-        self.params_rf = tuner_decision_tree.get_results()
+        print("---Performing hyperparameter tuning for DecisionTreeClassifier...")
+        self.params_dt = tuner_decision_tree.get_results()
 
-        self.params_dt = tuner_rand_forest.get_results()
+        print("---Performing hyperparameter tuning for RandomForestClassifier...")
+        self.params_rf = tuner_rand_forest.get_results()
 
+        print("---Performing hyperparameter tuning for XGBoostClassifier...")
         self.params_xgb = tuner_xgboost.get_results()
 
     def get_best_results(self):

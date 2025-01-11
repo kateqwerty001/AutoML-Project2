@@ -1,15 +1,16 @@
-from sklearn.tree import DecisionTreeClassifier
+from xgboost import XGBClassifier
 from sklearn.pipeline import Pipeline
 import pandas as pd
-from .optimization_algorithms.random_search_with_metrics import RandomSearchWithMetrics
+import numpy as np
 from sklearn.metrics import f1_score, roc_auc_score, accuracy_score
 from sklearn.model_selection import train_test_split
+from .optimization_algorithms.random_search_with_metrics import RandomSearchWithMetrics
 
 
-class DecisionTreeRandomSearch:
-    def __init__(self, dataset, n_iter=10, cv=5, random_state=42, n_repeats=2):
+class XGBoostRandomSearch:
+    def __init__(self, dataset, n_iter=10, cv=5, random_state=42, n_repeats=5):
         """
-        Initialize the DecisionTreeClassifierRandomSearch class.
+        Initialize the XGBoostRandomSearch class.
 
         Args:
             dataset: The preprocessed dataset (Pandas DataFrame).
@@ -24,21 +25,22 @@ class DecisionTreeRandomSearch:
         self.history = None 
         self.random_state = random_state
 
-        # Define the pipeline with a DecisionTreeClassifier
+        # Define the pipeline with an XGBoost classifier
         self.pipeline = Pipeline([
-            ('clf', DecisionTreeClassifier(random_state=random_state))  # Classifier
+            ('clf', XGBClassifier(random_state=random_state, objective='multi:softmax', num_class = len(np.unique(self.y))))  # Classifier
         ])
 
-        # Define hyperparameter grid for DecisionTreeClassifier
         self.params = {
-            'clf__criterion': ['gini', 'entropy', 'log_loss'],
-            'clf__splitter': ['best', 'random'],
-            'clf__max_depth': [None, 10, 20, 30, 40],
-            'clf__min_samples_split': [2, 5, 10],
-            'clf__min_samples_leaf': [1, 2, 4],
-            'clf__max_features': [None, 'sqrt', 'log2'],
-            'clf__class_weight': [None, 'balanced'],
-            'clf__min_impurity_decrease': [0.0, 0.1, 0.05, 0.01 ]
+            'clf__eval_metric': ['logloss', 'mlogloss'],
+            'clf__n_estimators': [50, 100, 200, 500],
+            'clf__max_depth': [3, 6, 10, 15],
+            'clf__learning_rate': [0.01, 0.05, 0.1, 0.2],
+            'clf__subsample': [0.5, 0.7, 0.9, 1.0],
+            'clf__colsample_bytree': [0.5, 0.7, 0.9, 1.0],
+            'clf__min_child_weight': [1, 3, 5, 7],
+            'clf__gamma': [0, 0.1, 0.2, 0.3],
+            'clf__reg_alpha': [0, 0.01, 0.1, 1],
+            'clf__reg_lambda': [1, 1.5, 2, 5]
         }
 
         # Initialize RandomSearchWithMetrics
@@ -65,14 +67,14 @@ class DecisionTreeRandomSearch:
 
     def fit_and_evaluate_default(self):
         """
-        Fit and evaluate the DecisionTreeClassifier using default parameters.
+        Fit and evaluate the RandomForestClassifier using default parameters.
         """
 
         # Split the data into training and testing sets
-        X_train, X_test, y_train, y_test = train_test_split(self.X, self.y, test_size=0.2, random_state=self.random_state)
+        X_train, X_test, y_train, y_test = train_test_split(self.X, self.y, test_size=0.2, random_state=self.random_state, stratify=self.y)
         
          # Initialize the DecisionTreeClassifier with default parameters
-        clf = DecisionTreeClassifier(random_state=42)
+        clf = XGBClassifier(random_state=42)
         
         # Fit the model to the training data
         clf.fit(X_train, y_train)
@@ -88,29 +90,32 @@ class DecisionTreeRandomSearch:
 
         # Prepare results
         results = {
-            "f1": f1,
-            "accuracy": accuracy,
-            "roc_auc": roc_auc,
-            "clf__criterion": clf.criterion,
-            "clf__splitter": clf.splitter,
-            "clf__max_depth": clf.max_depth,
-            "clf__min_samples_split": clf.min_samples_split,
-            "clf__min_samples_leaf": clf.min_samples_leaf,
-            "clf__max_features": clf.max_features,
-            "clf__class_weight": clf.class_weight,
-            "clf__min_impurity_decrease": clf.min_impurity_decrease
+            'f1': f1,
+            'accuracy': accuracy,
+            'roc_auc': roc_auc,
+            'clf__eval_metric': clf.eval_metric,
+            'clf__n_estimators': clf.n_estimators,
+            'clf__max_depth': clf.max_depth,
+            'clf__learning_rate': clf.learning_rate,
+            'clf__subsample': clf.subsample,
+            'clf__colsample_bytree': clf.colsample_bytree,
+            'clf__min_child_weight': clf.min_child_weight,
+            'clf__gamma': clf.gamma,
+            'clf__reg_alpha': clf.reg_alpha,
+            'clf__reg_lambda': clf.reg_lambda
         }
+        
+        print("Default model results:", results)
 
         # Convert results to a DataFrame
         self.default_results = pd.DataFrame([results])
 
         return self.default_results
     
-
     def get_results(self):
         """
         Get all results of metrics for a model returned in Pandas dataframe
-    
+
         """
 
         default_results = self.fit_and_evaluate_default()
@@ -120,4 +125,3 @@ class DecisionTreeRandomSearch:
         res = pd.concat([default_results, random_results], ignore_index=True)
 
         return res
-

@@ -13,6 +13,11 @@ class DataPreprocessor:
     '''
 
     def __init__(self, dataset, target_column_name):
+        # drop rows where target column is NaN
+        dataset = dataset.dropna(subset=[target_column_name])
+        # Check if target column has 2 unique values
+        if len(dataset[target_column_name].unique()) != 2:
+            raise ValueError('Target column should have exactly 2 unique values')
         self.dataset = dataset.copy()  # the whole dataset, with a target column
         self.target_column_name = target_column_name  # the name of the target column
 
@@ -60,4 +65,7 @@ class DataPreprocessor:
 
         print('---------------Dataset preprocessing is done------------')
 
-        return X, y
+        preprocessed_data = X.copy()
+        preprocessed_data['target'] = y
+
+        return preprocessed_data

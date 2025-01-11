@@ -90,10 +90,11 @@ class RandomSearchWithMetrics:
             avg_metrics = {
                 'f1': np.mean(f1_scores),
                 'accuracy': np.mean(accuracies),
-                # 'brier_score': np.mean(brier_scores),
                 'roc_auc': np.mean(roc_aucs)
             }
 
+            # inform the user that the process is ongoing
+            print("Checked another model, results on train-set, using cross-validation:",  avg_metrics)
             # Add the hyperparameter values to the metrics dictionary
             avg_metrics.update(params)
 

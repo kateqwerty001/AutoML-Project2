@@ -69,7 +69,7 @@ class RandomForestRandomSearch:
         """
 
         # Split the data into training and testing sets
-        X_train, X_test, y_train, y_test = train_test_split(self.X, self.y, test_size=0.2, random_state=self.random_state)
+        X_train, X_test, y_train, y_test = train_test_split(self.X, self.y, test_size=0.2, random_state=self.random_state, stratify=self.y)
         
          # Initialize the DecisionTreeClassifier with default parameters
         clf = RandomForestClassifier(random_state=42)
@@ -100,6 +100,8 @@ class RandomForestRandomSearch:
             'clf__max_features': clf.max_features,
             'clf__bootstrap': clf.bootstrap
         }
+
+        print("Default model results:", results)
 
         # Convert results to a DataFrame
         self.default_results = pd.DataFrame([results])
