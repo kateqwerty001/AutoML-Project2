@@ -1,92 +1,98 @@
 from sklearn.tree import DecisionTreeClassifier
 from sklearn.pipeline import Pipeline
 import pandas as pd
-from .optimization_algorithms.random_search_with_metrics import RandomSearchWithMetrics
+from random_search_with_metrics import RandomSearchWithMetrics
 from sklearn.metrics import f1_score, roc_auc_score, accuracy_score
 from sklearn.model_selection import train_test_split
-
 
 class DecisionTreeRandomSearch:
     def __init__(self, dataset, n_iter=10, cv=5, random_state=42, n_repeats=2):
         """
-        Initialize the DecisionTreeClassifierRandomSearch class.
+        Initialize the DecisionTreeRandomSearch class.
 
         Args:
-            dataset: The preprocessed dataset (Pandas DataFrame).
-            n_iter: Number of iterations to perform random search.
-            cv: Number of cross-validation splits.
-            random_state: Random seed for reproducibility.
-            n_repeats: Number of times to repeat cross-validation for stability.
+            dataset (pd.DataFrame): The preprocessed dataset containing features and the target column.
+            n_iter (int): Number of iterations for random search.
+            cv (int): Number of cross-validation splits.
+            random_state (int): Random seed for reproducibility.
+            n_repeats (int): Number of times to repeat cross-validation for stability.
         """
-        # Split the dataset into features (X) and target (y)
-        self.X = dataset.drop(columns=['target'])  # Assumes 'target' column is the label column
-        self.y = dataset['target']  # Assumes 'target' column is the label
-        self.history = None 
-        self.random_state = random_state
+        # Separate features (X) and target variable (y)
+        self.X = dataset.drop(columns=['target'])  # Assumes 'target' is the column name for labels
+        self.y = dataset['target']  # Target variable
+        self.history = None  # Stores results of random search
+        self.random_state = random_state  # Seed for reproducibility
 
-        # Define the pipeline with a DecisionTreeClassifier
+        # Define a pipeline with a DecisionTreeClassifier (additional preprocessing steps can be added here)
         self.pipeline = Pipeline([
-            ('clf', DecisionTreeClassifier(random_state=random_state))  # Classifier
+            ('clf', DecisionTreeClassifier(random_state=random_state))  # Decision tree classifier
         ])
 
-        # Define hyperparameter grid for DecisionTreeClassifier
+        # Define hyperparameter search space for DecisionTreeClassifier
         self.params = {
-            'clf__criterion': ['gini', 'entropy', 'log_loss'],
-            'clf__splitter': ['best', 'random'],
-            'clf__max_depth': [None, 10, 20, 30, 40],
-            'clf__min_samples_split': [2, 5, 10],
-            'clf__min_samples_leaf': [1, 2, 4],
-            'clf__max_features': [None, 'sqrt', 'log2'],
-            'clf__class_weight': [None, 'balanced'],
-            'clf__min_impurity_decrease': [0.0, 0.1, 0.05, 0.01 ]
+            'clf__criterion': ['gini', 'entropy', 'log_loss'],  # Criteria to measure split quality
+            'clf__splitter': ['best', 'random'],  # Strategy to choose split at each node
+            'clf__max_depth': [None, 10, 20, 30, 40],  # Maximum depth of the tree
+            'clf__min_samples_split': [2, 5, 10],  # Minimum samples required to split an internal node
+            'clf__min_samples_leaf': [1, 2, 4],  # Minimum samples required to be a leaf node
+            'clf__max_features': [None, 'sqrt', 'log2'],  # Number of features to consider for splits
+            'clf__class_weight': [None, 'balanced'],  # Class weight adjustments
+            'clf__min_impurity_decrease': [0.0, 0.1, 0.05, 0.01]  # Minimum impurity decrease for a split
         }
 
-        # Initialize RandomSearchWithMetrics
+        # Initialize the custom RandomSearchWithMetrics for hyperparameter tuning
         self.random_search = RandomSearchWithMetrics(
-            pipeline=self.pipeline,
-            params=self.params,
-            X=self.X,
-            y=self.y,
-            n_iter=n_iter,
-            cv=cv,
-            random_state=random_state,
-            n_repeats=n_repeats
+            pipeline=self.pipeline,  # Machine learning pipeline
+            params=self.params,  # Hyperparameter search space
+            X=self.X,  # Features
+            y=self.y,  # Target variable
+            n_iter=n_iter,  # Number of search iterations
+            cv=cv,  # Number of cross-validation splits
+            random_state=random_state,  # Seed for reproducibility
+            n_repeats=n_repeats  # Stability through repeated cross-validation
         )
 
     def perform_random_search(self):
         """
-        Perform the random search and hyperparameter tuning using RandomSearchWithMetrics.
+        Perform random search for hyperparameter tuning using RandomSearchWithMetrics.
+
+        Returns:
+            pd.DataFrame: History of hyperparameter search results.
         """
+        # Execute the random search and store results
         self.random_search.fit_and_evaluate()
-
         self.history = self.random_search.get_results()
-
         return self.history
 
     def fit_and_evaluate_default(self):
         """
         Fit and evaluate the DecisionTreeClassifier using default parameters.
-        """
 
-        # Split the data into training and testing sets
-        X_train, X_test, y_train, y_test = train_test_split(self.X, self.y, test_size=0.2, random_state=self.random_state, stratify=self.y)
-        
-         # Initialize the DecisionTreeClassifier with default parameters
-        clf = DecisionTreeClassifier(random_state=42)
-        
-        # Fit the model to the training data
+        Returns:
+            pd.DataFrame: Evaluation metrics and model parameters for the default configuration.
+        """
+        # Split dataset into training and testing sets (80% train, 20% test)
+        X_train, X_test, y_train, y_test = train_test_split(
+            self.X, self.y, test_size=0.2, random_state=self.random_state, stratify=self.y
+        )
+
+        # Initialize DecisionTreeClassifier with default parameters
+        clf = DecisionTreeClassifier(random_state=self.random_state)
+
+        # Train the model on the training set
         clf.fit(X_train, y_train)
-        
-        # Make predictions
+
+        # Make predictions on the test set
         y_pred = clf.predict(X_test)
         y_pred_proba = clf.predict_proba(X_test)[:, 1] if hasattr(clf, "predict_proba") else None
 
-        # Calculate metrics
-        f1 = f1_score(y_test, y_pred, average="weighted")
-        accuracy = accuracy_score(y_test, y_pred)
-        roc_auc = roc_auc_score(y_test, y_pred_proba, average="weighted") if y_pred_proba is not None else None
+        # Calculate evaluation metrics
+        f1 = f1_score(y_test, y_pred, average="weighted")  # Weighted F1 score
+        accuracy = accuracy_score(y_test, y_pred)  # Accuracy score
+        roc_auc = (roc_auc_score(y_test, y_pred_proba, average="weighted")
+                   if y_pred_proba is not None else None)  # ROC-AUC score (if available)
 
-        # Prepare results
+        # Compile results into a dictionary
         results = {
             "f1": f1,
             "accuracy": accuracy,
@@ -102,24 +108,24 @@ class DecisionTreeRandomSearch:
         }
 
         print("Default model results:", results)
-        
-        # Convert results to a DataFrame
-        self.default_results = pd.DataFrame([results])
 
+        # Convert results to a DataFrame for easier comparison
+        self.default_results = pd.DataFrame([results])
         return self.default_results
-    
 
     def get_results(self):
         """
-        Get all results of metrics for a model returned in Pandas dataframe
-    
-        """
+        Aggregate results from the default configuration and random search.
 
+        Returns:
+            pd.DataFrame: Combined results of default and tuned configurations.
+        """
+        # Evaluate default configuration
         default_results = self.fit_and_evaluate_default()
 
+        # Perform random search for hyperparameter tuning
         random_results = self.perform_random_search()
 
+        # Combine both results into a single DataFrame
         res = pd.concat([default_results, random_results], ignore_index=True)
-
         return res
-
