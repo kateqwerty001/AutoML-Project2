@@ -14,10 +14,10 @@ class RandomSearchWithMetrics:
             params: Dictionary of hyperparameter names and their possible values.
             X: Feature dataset (numpy array or Pandas DataFrame).
             y: Target dataset (numpy array or Pandas Series).
-            n_iter: Number of iterations to perform random search.
-            cv: Number of cross-validation splits.
-            random_state: Random seed for reproducibility.
-            n_repeats: Number of times to repeat cross-validation for stability.
+            n_iter: Number of iterations to perform random search (default 10).
+            cv: Number of cross-validation splits (default 5).
+            random_state: Random seed for reproducibility (default 42).
+            n_repeats: Number of times to repeat cross-validation for stability (default 5).
         """
         self.pipeline = pipeline
         self.params = params
@@ -39,12 +39,17 @@ class RandomSearchWithMetrics:
         params = {}
         for key, values in self.params.items():
             if isinstance(values, list):  # Ensure values is a list to allow random selection
-                params[key] = random.choice(values)
+                params[key] = random.choice(values)  # Select a random value from the list of possible values
         return params
 
     def fit_and_evaluate(self):
         """
         Perform random search with cross-validation and store the results in `self.history`.
+        This method will perform the following:
+            - Randomly select hyperparameters for each iteration.
+            - Apply them to the pipeline.
+            - Perform cross-validation `n_repeats` times to calculate stability in metrics.
+            - Compute F1 score, accuracy, and ROC AUC.
         """
         # Set seed for reproducibility
         random.seed(self.random_state)
@@ -56,45 +61,32 @@ class RandomSearchWithMetrics:
             self.pipeline.set_params(**params)  # Apply the hyperparameters to the pipeline
 
             # Initialize lists to accumulate metrics across repeats
-            
-            # f1_scores, accuracies, brier_scores, roc_aucs = [], [], [], []
-
             f1_scores, accuracies, roc_aucs = [], [], []
 
-            for j in range(self.n_repeats):  # Repeat cross-validation `n_repeats` times
-                # Create KFold object for cross-validation
-                kf = KFold(n_splits=self.cv, shuffle=True)
+            for j in range(self.n_repeats):  # Repeat cross-validation `n_repeats` times for stability
+                # Create KFold object for cross-validation (shuffle=True for random splits)
+                kf = KFold(n_splits=self.cv, shuffle=True, random_state=self.random_state)
 
                 # Perform cross-validation predictions for both labels and probabilities
                 y_pred = cross_val_predict(self.pipeline, self.X, self.y, cv=kf, method='predict')
                 y_probabilities = cross_val_predict(self.pipeline, self.X, self.y, cv=kf, method='predict_proba')
+                y_probabilities = y_probabilities[:, 1]  # Get probabilities for the positive class (binary classification)
 
-                # Check if the problem is binary or multiclass
-                if len(np.unique(self.y)) == 2:  # Binary classification
-                    y_probabilities = y_probabilities[:, 1]  # Get probabilities for the positive class
-
-                    # Calculate metrics for binary classification
-                    f1_scores.append(f1_score(self.y, y_pred, average='weighted'))
-                    accuracies.append(accuracy_score(self.y, y_pred))
-                    # brier_scores.append(brier_score_loss(self.y, y_probabilities))
-                    roc_aucs.append(roc_auc_score(self.y, y_probabilities))
-
-                else:  # Multiclass classification
-                    # Calculate metrics for multiclass classification
-                    f1_scores.append(f1_score(self.y, y_pred, average='weighted'))
-                    accuracies.append(accuracy_score(self.y, y_pred))
-                    # brier_scores.append(brier_score_loss(self.y, y_probabilities)) 
-                    roc_aucs.append(roc_auc_score(self.y, y_probabilities, multi_class='ovr', average='weighted'))
+                # Calculate and append evaluation metrics for binary classification
+                f1_scores.append(f1_score(self.y, y_pred, average='weighted'))  # Weighted F1 score
+                accuracies.append(accuracy_score(self.y, y_pred))  # Accuracy score
+                roc_aucs.append(roc_auc_score(self.y, y_probabilities))  # ROC AUC score
 
             # Calculate average metrics across all repeats
             avg_metrics = {
-                'f1': np.mean(f1_scores),
-                'accuracy': np.mean(accuracies),
-                'roc_auc': np.mean(roc_aucs)
+                'f1': np.mean(f1_scores),  # Average F1 score
+                'accuracy': np.mean(accuracies),  # Average accuracy
+                'roc_auc': np.mean(roc_aucs)  # Average ROC AUC
             }
 
-            # inform the user that the process is ongoing
-            print("Checked another model, results on train-set, using cross-validation:",  avg_metrics)
+            # Print the current results for the user (useful for monitoring)
+            print("Checked another model, results on train-set, using cross-validation:", avg_metrics)
+
             # Add the hyperparameter values to the metrics dictionary
             avg_metrics.update(params)
 
@@ -103,14 +95,11 @@ class RandomSearchWithMetrics:
 
     def get_results(self):
         """
-        Retrive all combinations of hyperparameters and their metric values (roc_auc, f1, accuracy)
+        Retrieve all combinations of hyperparameters and their corresponding metric values
+        (F1 score, accuracy, and ROC AUC).
 
-        Returns a pandas dataframe with hyperparameter combinations and metrics
-        """ 
+        Returns:
+            pd.DataFrame: DataFrame with hyperparameter combinations and metrics.
+        """
+        return self.history  # Return the history DataFrame containing the results
 
-        return self.history
-
-   
-
-
-   
