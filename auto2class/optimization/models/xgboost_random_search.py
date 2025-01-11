@@ -27,11 +27,11 @@ class XGBoostRandomSearch:
 
         # Define the pipeline with an XGBoost classifier
         self.pipeline = Pipeline([
-            ('clf', XGBClassifier(random_state=random_state, objective='multi:softmax', num_class = len(np.unique(self.y))))  # Classifier
+            ('clf', XGBClassifier(random_state=self.random_state, objective='binary:logistic')) # XGBoost classifier
         ])
 
         self.params = {
-            'clf__eval_metric': ['logloss', 'mlogloss'],
+            'clf__eval_metric': ['logloss'],
             'clf__n_estimators': [50, 100, 200, 500],
             'clf__max_depth': [3, 6, 10, 15],
             'clf__learning_rate': [0.01, 0.05, 0.1, 0.2],
@@ -74,7 +74,7 @@ class XGBoostRandomSearch:
         X_train, X_test, y_train, y_test = train_test_split(self.X, self.y, test_size=0.2, random_state=self.random_state, stratify=self.y)
         
          # Initialize the DecisionTreeClassifier with default parameters
-        clf = XGBClassifier(random_state=42)
+        clf = XGBClassifier(random_state=42, objective='binary:logistic')
         
         # Fit the model to the training data
         clf.fit(X_train, y_train)
@@ -87,6 +87,7 @@ class XGBoostRandomSearch:
         f1 = f1_score(y_test, y_pred, average="weighted")
         accuracy = accuracy_score(y_test, y_pred)
         roc_auc = roc_auc_score(y_test, y_pred_proba, average="weighted") if y_pred_proba is not None else None
+
 
         # Prepare results
         results = {

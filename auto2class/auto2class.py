@@ -11,10 +11,16 @@ class Auto2Class:
         self.test_size = test_size
         self.random_state = random_state
         self.cv = cv
+        self.params_rf = None
+        self.params_dt = None
+        self.params_xgb = None
         
 
     def perform_model_selection(self):
         preprocessed_data = DataPreprocessor(self.dataframe, self.target_column_name).preprocess()
-        optimizer = OptimizerAllModels(preprocessed_data, self.test_size, self.random_state, self.n_iter, self.cv, self.n_repeats, self.metric)
-        optimizer.perform_analysis()
-        return optimizer.get_best_results()
+        self.optimizer = OptimizerAllModels(preprocessed_data, self.test_size, self.random_state, self.n_iter, self.cv, self.n_repeats, self.metric)
+        self.optimizer.perform_analysis()
+        self.params_rf = self.optimizer.params_rf
+        self.params_dt = self.optimizer.params_dt
+        self.params_xgb = self.optimizer.params_xgb
+        return 
