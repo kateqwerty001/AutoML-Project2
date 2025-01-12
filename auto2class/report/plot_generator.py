@@ -107,26 +107,28 @@ class PlotGenerator:
         Generate box plots for the metrics of different models.
         """
         self.dataset_name = dataset_name
+
+        model_order = ['Decision Tree', 'Random Forest', 'XGBoost']
         # Create a figure with 3 subplots (1 row, 3 columns)
         fig, axes = plt.subplots(1, 3, figsize=(18, 6))
 
         # Create boxplot for 'accuracy' on the first subplot
-        sns.boxplot(x='model', y='accuracy', data=metrics, color='#0A6CF1', linewidth=2, fliersize=6, ax=axes[0])
-        sns.stripplot(x='model', y='accuracy', data=metrics, color='#02275A', jitter=True, size=7, alpha=1, ax=axes[0])
+        sns.boxplot(x='model', y='accuracy', data=metrics, color='#0A6CF1', linewidth=2, fliersize=6, ax=axes[0], order=model_order)
+        sns.stripplot(x='model', y='accuracy', data=metrics, color='#02275A', jitter=True, size=7, alpha=1, ax=axes[0], order=model_order)
         axes[0].set_title('Accuracy Comparison', fontsize=16)
         axes[0].set_xlabel('Model', fontsize=14)
         axes[0].set_ylabel('Accuracy', fontsize=14)
 
         # Create boxplot for 'f1' on the second subplot
-        sns.boxplot(x='model', y='f1', data=metrics, color='#0A6CF1', linewidth=2, fliersize=6, ax=axes[1])
-        sns.stripplot(x='model', y='f1', data=metrics, color='#02275A', jitter=True, size=7, alpha=1, ax=axes[1])
+        sns.boxplot(x='model', y='f1', data=metrics, color='#0A6CF1', linewidth=2, fliersize=6, ax=axes[1], order=model_order)
+        sns.stripplot(x='model', y='f1', data=metrics, color='#02275A', jitter=True, size=7, alpha=1, ax=axes[1], order=model_order)
         axes[1].set_title('F1 Score Comparison', fontsize=16)
         axes[1].set_xlabel('Model', fontsize=14)
         axes[1].set_ylabel('F1 Score', fontsize=14)
 
         # Create boxplot for 'roc_auc' on the third subplot
-        sns.boxplot(x='model', y='roc_auc', data=metrics, color='#0A6CF1', linewidth=2, fliersize=6, ax=axes[2])
-        sns.stripplot(x='model', y='roc_auc', data=metrics, color='#02275A', jitter=True, size=7, alpha=1, ax=axes[2])
+        sns.boxplot(x='model', y='roc_auc', data=metrics, color='#0A6CF1', linewidth=2, fliersize=6, ax=axes[2], order=model_order)
+        sns.stripplot(x='model', y='roc_auc', data=metrics, color='#02275A', jitter=True, size=7, alpha=1, ax=axes[2], order=model_order)
         axes[2].set_title('ROC AUC Comparison', fontsize=16)
         axes[2].set_xlabel('Model', fontsize=14)
         axes[2].set_ylabel('ROC AUC', fontsize=14)
