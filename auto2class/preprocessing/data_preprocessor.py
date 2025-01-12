@@ -9,7 +9,7 @@ import warnings
 
 class DataPreprocessor:
     '''
-    A class where
+    A class where the dataset is preprocessed.
     '''
 
     def __init__(self, dataset, target_column_name):

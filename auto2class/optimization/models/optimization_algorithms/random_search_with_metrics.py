@@ -28,6 +28,7 @@ class RandomSearchWithMetrics:
         self.random_state = random_state
         self.n_repeats = n_repeats  # For repeated cross-validation to ensure stable metrics
         self.history = pd.DataFrame()  # In-memory storage for the results
+        self.classifiers = []
 
     def generate_random_params(self):
         """
@@ -87,6 +88,7 @@ class RandomSearchWithMetrics:
             # Print the current results for the user (useful for monitoring)
             print("Checked another model, results using cross-validation:", avg_metrics)
 
+            self.classifiers.append(self.pipeline.named_steps['clf'])
             # Add the hyperparameter values to the metrics dictionary
             avg_metrics.update(params)
 
@@ -101,5 +103,5 @@ class RandomSearchWithMetrics:
         Returns:
             pd.DataFrame: DataFrame with hyperparameter combinations and metrics.
         """
-        return self.history  # Return the history DataFrame containing the results
+        return self.history, self.classifiers  # Return the history DataFrame containing the results, and the classifiers
 

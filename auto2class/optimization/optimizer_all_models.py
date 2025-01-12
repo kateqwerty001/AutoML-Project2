@@ -43,6 +43,10 @@ class OptimizerAllModels:
 
         self.params_xgb = None
 
+        self.best_xgb_instance = None
+        self.best_rf_instance = None
+        self.best_dt_instance = None
+
     def tune_hyperparameters(self):
         """
         Perform hyperparameter tuning using DecisionTreeClassifierRandomSearch/RandomForestClassifier/XGBoostClassifier.
@@ -85,13 +89,13 @@ class OptimizerAllModels:
         # Perform hyperparameter optimization using RandomSearch
 
         print("---Performing hyperparameter tuning for DecisionTreeClassifier...")
-        self.params_dt = tuner_decision_tree.get_results()
+        self.params_dt, self.all_clf_dt = tuner_decision_tree.get_results()
 
         print("---Performing hyperparameter tuning for RandomForestClassifier...")
-        self.params_rf = tuner_rand_forest.get_results()
+        self.params_rf, self.all_clf_rf = tuner_rand_forest.get_results()
 
         print("---Performing hyperparameter tuning for XGBoostClassifier...")
-        self.params_xgb = tuner_xgboost.get_results()
+        self.params_xgb, self.all_clf_xgb = tuner_xgboost.get_results()
 
     def get_best_results(self):
         """
@@ -100,8 +104,16 @@ class OptimizerAllModels:
         """
         # Extract best results for each model
         best_rf = self.params_rf.loc[self.params_rf[self.metric_to_eval].idxmax()]
+        # save the best model instance
+        self.best_rf_instance = self.all_clf_rf[self.params_rf[self.metric_to_eval].idxmax()]
+
         best_dt = self.params_dt.loc[self.params_dt[self.metric_to_eval].idxmax()]
+        # save the best model instance
+        self.best_dt_instance = self.all_clf_dt[self.params_dt[self.metric_to_eval].idxmax()]
+
         best_xgb = self.params_xgb.loc[self.params_xgb[self.metric_to_eval].idxmax()]
+        # save the best model instance
+        self.best_xgb_instance = self.all_clf_xgb[self.params_xgb[self.metric_to_eval].idxmax()]
 
         # Print the best results
         print("The best hyperparameters for RandomForestClassifier are:")

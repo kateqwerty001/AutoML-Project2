@@ -56,6 +56,8 @@ class XGBoostRandomSearch:
             n_repeats=n_repeats  # Repeated CV for stability
         )
 
+        self.classifiers = []
+
     def perform_random_search(self):
         """
         Perform hyperparameter tuning using random search.
@@ -67,8 +69,9 @@ class XGBoostRandomSearch:
         self.random_search.fit_and_evaluate()
 
         # Retrieve and store the results from random search
-        self.history = self.random_search.get_results()
-
+        self.history, random_search_classifiers = self.random_search.get_results()
+        for clf in random_search_classifiers:
+            self.classifiers.append(clf)
         return self.history
 
     def fit_and_evaluate_default(self):
@@ -117,6 +120,7 @@ class XGBoostRandomSearch:
 
         # Display the results for the default model
         print("Default model results:", results)
+        self.classifiers.append(clf)  # Append the default classifier to the list of classifiers
 
         # Convert results to a Pandas DataFrame
         self.default_results = pd.DataFrame([results])
@@ -139,4 +143,4 @@ class XGBoostRandomSearch:
         # Combine default and random search results into a single DataFrame
         res = pd.concat([default_results, random_results], ignore_index=True)
 
-        return res
+        return res, self.classifiers

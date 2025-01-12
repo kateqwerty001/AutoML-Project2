@@ -2,9 +2,10 @@ from pylatex import Command, Document, Section, Subsection, Tabular
 from pylatex.utils import NoEscape
 from pylatex.table import Table 
 import pandas as pd
-import io
+import io, os
 from pylatex import Section, Subsection, Figure, NoEscape, Subsubsection
 from .plot_generator import PlotGenerator
+import joblib
 
 class ReportGenerator:
     def __init__(self, dataset, dataset_name, optimizer):
@@ -26,6 +27,13 @@ class ReportGenerator:
         self.optimizer.metrics_dt['model'] = 'Decision Tree'
         
         self.metrics = pd.concat([self.optimizer.metrics_xgb, self.optimizer.metrics_rf, self.optimizer.metrics_dt])
+
+        # create Models folder
+        os.makedirs(f'Results/{self.dataset_name}/Models', exist_ok=True)
+        
+        joblib.dump(self.optimizer.best_xgb_instance, f'Results/{self.dataset_name}/Models/best_XGBoost.joblib')
+        joblib.dump(self.optimizer.best_rf_instance, f'Results/{self.dataset_name}/Models/best_RandomForest.joblib')
+        joblib.dump(self.optimizer.best_dt_instance, f'Results/{self.dataset_name}/Models/best_DecisionTree.joblib')
 
 
     def make_small_margins(self):
@@ -141,6 +149,7 @@ class ReportGenerator:
                 fig.add_image(f'EDA/histograms.png', width='460px')
                 fig.add_caption('Histograms of Numerical columns')
         return 
+
         
     def add_metrics_description(self):
         """

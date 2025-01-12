@@ -52,6 +52,8 @@ class DecisionTreeRandomSearch:
             n_repeats=n_repeats  # Stability through repeated cross-validation
         )
 
+        self.classifiers = []
+
     def perform_random_search(self):
         """
         Perform random search for hyperparameter tuning using RandomSearchWithMetrics.
@@ -61,7 +63,9 @@ class DecisionTreeRandomSearch:
         """
         # Execute the random search and store results
         self.random_search.fit_and_evaluate()
-        self.history = self.random_search.get_results()
+        self.history, random_search_classifiers = self.random_search.get_results()
+        for clf in random_search_classifiers:
+            self.classifiers.append(clf)
         return self.history
 
     def fit_and_evaluate_default(self):
@@ -111,6 +115,8 @@ class DecisionTreeRandomSearch:
 
         # Convert results to a DataFrame for easier comparison
         self.default_results = pd.DataFrame([results])
+
+        self.classifiers.append(clf) # append the default classifier to the list of classifiers
         return self.default_results
 
     def get_results(self):
@@ -124,8 +130,8 @@ class DecisionTreeRandomSearch:
         default_results = self.fit_and_evaluate_default()
 
         # Perform random search for hyperparameter tuning
-        random_results = self.perform_random_search()
+        random_results  = self.perform_random_search()
 
         # Combine both results into a single DataFrame
         res = pd.concat([default_results, random_results], ignore_index=True)
-        return res
+        return res, self.classifiers
