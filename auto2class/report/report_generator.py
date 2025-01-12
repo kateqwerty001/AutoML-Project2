@@ -123,7 +123,7 @@ class ReportGenerator:
         with self.doc.create(Subsubsection('Bar Charts of Categorical columns')):
             # put image in the latex document
             with self.doc.create(Figure(position='h!')) as fig:
-                fig.add_image('Results/EDA/bar_charts.png', width='460px')
+                fig.add_image(f'EDA/bar_charts.png', width='460px')
                 fig.add_caption('Bar Charts of Categorical columns')
 
 
@@ -138,7 +138,7 @@ class ReportGenerator:
         with self.doc.create(Subsubsection('Histograms of Numerical columns')):
             # put image in the latex document
             with self.doc.create(Figure(position='h!')) as fig:
-                fig.add_image('Results/EDA/histograms.png', width='460px')
+                fig.add_image(f'EDA/histograms.png', width='460px')
                 fig.add_caption('Histograms of Numerical columns')
         return 
         
@@ -213,7 +213,6 @@ class ReportGenerator:
                 """))
 
         
-    
     def print_dataframe(self, df, caption, num_after_dot=2, no_index=False):
         '''
         This method prints the entire dataframe to the report.
@@ -293,10 +292,17 @@ class ReportGenerator:
                 plt = PlotGenerator().generate_box_plots_metrics(self.metrics, self.dataset_name)
                 # put image in the latex document
                 with self.doc.create(Figure(position='h!')) as fig:
-                    fig.add_image('Results/ModelOptimization/box_plots_metrics.png', width='460px')
+                    fig.add_image(f'ModelOptimization/box_plots_metrics.png', width='460px')
                     fig.add_caption('Boxplots of accuracy, f1, roc_auc')
 
-        self.doc.generate_pdf('report', clean_tex=False)
+            with self.doc.create(Subsection('Barplots of maximum values of metrics achievied by model')):
+                plt = PlotGenerator().generate_barplots_max_metric(self.metrics, self.dataset_name)
+                # put image in the latex document
+                with self.doc.create(Figure(position='h!')) as fig:
+                    fig.add_image(f'ModelOptimization/barplots_max_metric.png', width='460px')
+                    fig.add_caption('Barplots of maximum values of metrics achievied by model')
+
+        self.doc.generate_pdf(f'Results/{self.dataset_name}/report', clean_tex=False)
 
 
     

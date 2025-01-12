@@ -44,8 +44,8 @@ class PlotGenerator:
             axes[j].axis('off')
 
         # save to EDA
-        os.makedirs('Results/EDA', exist_ok=True)
-        plt.savefig('Results/EDA/histograms.png', bbox_inches='tight', pad_inches=0)
+        os.makedirs(f'Results/{self.dataset_name}/EDA', exist_ok=True)
+        plt.savefig(f'Results/{self.dataset_name}/EDA/histograms.png', bbox_inches='tight', pad_inches=0)
         plt.close()
         
         return plt
@@ -96,8 +96,8 @@ class PlotGenerator:
         plt.subplots_adjust(hspace=0.4, wspace=0.4)
 
         # Save to EDA
-        os.makedirs('Results/EDA', exist_ok=True)
-        plt.savefig('Results/EDA/bar_charts.png', bbox_inches='tight', pad_inches=0)
+        os.makedirs(f'Results/{self.dataset_name}/EDA', exist_ok=True)
+        plt.savefig(f'Results/{self.dataset_name}/EDA/bar_charts.png', bbox_inches='tight', pad_inches=0)
         plt.close()
         
         return plt
@@ -135,11 +135,55 @@ class PlotGenerator:
         plt.tight_layout()
 
         # Save to Results
-        os.makedirs('Results/ModelOptimization', exist_ok=True)
-        plt.savefig('Results/ModelOptimization/box_plots_metrics.png', bbox_inches='tight', pad_inches=0)
+        os.makedirs(f'Results/{self.dataset_name}/ModelOptimization', exist_ok=True)
+        plt.savefig(f'Results/{self.dataset_name}/ModelOptimization/box_plots_metrics.png', bbox_inches='tight', pad_inches=0)
         plt.close()
 
         return plt
+     
+    def generate_barplots_max_metric(self, data, dataset_name):
+        """
+        Generate bar plots for the maximum value of each metric by model.
+        """
+        self.dataset_name = dataset_name
+        metrics = ['accuracy', 'f1', 'roc_auc']
+        max_metrics = {metric: data.groupby("model")[metric].max().reset_index() for metric in metrics}
+
+        fig, axes = plt.subplots(1, 3, figsize=(15, 5), sharey=True)
+
+        # Create bar plots for each metric
+        for ax, metric, color in zip(axes, metrics, ['#BD1052', '#BD1052', '#BD1052']):
+            barplot = sns.barplot(x="model", y=metric, data=max_metrics[metric], ax=ax, color=color)
+            ax.set_title(f"Maximum {metric.capitalize()} by Model")
+            ax.set_xlabel("Model")
+            ax.set_ylabel(metric.capitalize() if ax == axes[0] else "")
+            ax.set_ylim(0, 1)  
+
+            # Set the edge color of the bars to black
+            for patch in ax.patches:
+                patch.set_edgecolor('black') 
+                patch.set_linewidth(0.5) 
+
+            # Add text labels to the bars with the values
+            for container in barplot.containers:
+                for bar in container:
+                    ax.text(
+                        bar.get_x() + bar.get_width() / 2, 
+                        bar.get_height() - 0.1,  
+                        f"{bar.get_height():.2f}", 
+                        ha='center', va='bottom', 
+                        fontsize=10, weight='bold', color="black"
+                    )
+
+        plt.tight_layout()
+
+        # Save to Results
+        os.makedirs(f'Results/{self.dataset_name}/ModelOptimization', exist_ok=True)
+        plt.savefig(f'Results/{self.dataset_name}/ModelOptimization/barplots_max_metric.png', bbox_inches='tight', pad_inches=0)
+        plt.close()
+
+        return plt
+
 
         
 
