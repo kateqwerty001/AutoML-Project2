@@ -43,8 +43,8 @@ class PlotGenerator:
             axes[j].axis('off')
 
         # save to EDA
-        os.makedirs('EDA', exist_ok=True)
-        plt.savefig('EDA/histograms.png', bbox_inches='tight', pad_inches=0)
+        os.makedirs('Results/EDA', exist_ok=True)
+        plt.savefig('Results/EDA/histograms.png', bbox_inches='tight', pad_inches=0)
         plt.close()
         
         return plt
@@ -94,10 +94,46 @@ class PlotGenerator:
         plt.subplots_adjust(hspace=0.4, wspace=0.4)
 
         # Save to EDA
-        os.makedirs('EDA', exist_ok=True)
-        plt.savefig('EDA/bar_charts.png', bbox_inches='tight', pad_inches=0)
+        os.makedirs('Results/EDA', exist_ok=True)
+        plt.savefig('Results/EDA/bar_charts.png', bbox_inches='tight', pad_inches=0)
         plt.close()
         
         return plt
+    
+    def generate_box_plots_metrics(self, metrics):
+        # Create a figure with 3 subplots (1 row, 3 columns)
+        fig, axes = plt.subplots(1, 3, figsize=(18, 6))
+
+        # Create boxplot for 'accuracy' on the first subplot
+        sns.boxplot(x='model', y='accuracy', data=metrics, color='#0A6CF1', linewidth=2, fliersize=6, ax=axes[0])
+        sns.stripplot(x='model', y='accuracy', data=metrics, color='#02275A', jitter=True, size=7, alpha=1, ax=axes[0])
+        axes[0].set_title('Accuracy Comparison', fontsize=16)
+        axes[0].set_xlabel('Model', fontsize=14)
+        axes[0].set_ylabel('Accuracy', fontsize=14)
+
+        # Create boxplot for 'f1' on the second subplot
+        sns.boxplot(x='model', y='f1', data=metrics, color='#0A6CF1', linewidth=2, fliersize=6, ax=axes[1])
+        sns.stripplot(x='model', y='f1', data=metrics, color='#02275A', jitter=True, size=7, alpha=1, ax=axes[1])
+        axes[1].set_title('F1 Score Comparison', fontsize=16)
+        axes[1].set_xlabel('Model', fontsize=14)
+        axes[1].set_ylabel('F1 Score', fontsize=14)
+
+        # Create boxplot for 'roc_auc' on the third subplot
+        sns.boxplot(x='model', y='roc_auc', data=metrics, color='#0A6CF1', linewidth=2, fliersize=6, ax=axes[2])
+        sns.stripplot(x='model', y='roc_auc', data=metrics, color='#02275A', jitter=True, size=7, alpha=1, ax=axes[2])
+        axes[2].set_title('ROC AUC Comparison', fontsize=16)
+        axes[2].set_xlabel('Model', fontsize=14)
+        axes[2].set_ylabel('ROC AUC', fontsize=14)
+
+        # Adjust layout for better spacing between plots
+        plt.tight_layout()
+
+        # Save to Results
+        os.makedirs('Results/ModelOptimization', exist_ok=True)
+        plt.savefig('Results/ModelOptimization/box_plots_metrics.png', bbox_inches='tight', pad_inches=0)
+        plt.close()
+
+        return plt
+
         
 

@@ -101,7 +101,7 @@ Index&Column Name/Statistic&count&mean&std&min&25\%&50\%&75\%&max\\%
 
 \begin{figure}[h!]%
 \centering%
-\includegraphics[width=460px]{EDA/histograms.png}%
+\includegraphics[width=460px]{Results/EDA/histograms.png}%
 \caption{Histograms of Numerical columns}%
 \end{figure}
 
@@ -113,7 +113,7 @@ Index&Column Name/Statistic&count&mean&std&min&25\%&50\%&75\%&max\\%
 
 \begin{figure}[h!]%
 \centering%
-\includegraphics[width=460px]{EDA/bar_charts.png}%
+\includegraphics[width=460px]{Results/EDA/bar_charts.png}%
 \caption{Bar Charts of Categorical columns}%
 \end{figure}
 
@@ -121,6 +121,8 @@ Index&Column Name/Statistic&count&mean&std&min&25\%&50\%&75\%&max\\%
 \newpage%
 \section{Model Optimization Results}%
 \label{sec:ModelOptimizationResults}%
+\subsection{Optimization Results Tables}%
+\label{subsec:OptimizationResultsTables}%
 
 
 \begin{table}[h!]%
@@ -131,9 +133,9 @@ Index&Column Name/Statistic&count&mean&std&min&25\%&50\%&75\%&max\\%
 \hline%
 Index&Metric/Hyperp.\textbackslash{} Iteration&0&1&2\\%
 \hline%
-0&f1&0.9363&0.7724&0.9282\\%
-1&accuracy&0.9363&0.7724&0.9283\\%
-2&roc\_auc&0.9863&0.8578&0.9823\\%
+0&f1&0.9314&0.7738&0.9278\\%
+1&accuracy&0.9314&0.7738&0.9279\\%
+2&roc\_auc&0.9837&0.8582&0.9825\\%
 3&n\_estimators&100&50&50\\%
 4&criterion&gini&gini&log\_loss\\%
 5&max\_depth&None&20&30\\%
@@ -157,9 +159,9 @@ Index&Metric/Hyperp.\textbackslash{} Iteration&0&1&2\\%
 \hline%
 Index&Metric/Hyperp. \textbackslash{} Iteration&0&1&2\\%
 \hline%
-0&f1&0.8924&0.7044&0.8359\\%
-1&accuracy&0.8928&0.7105&0.8359\\%
-2&roc\_auc&0.8928&0.7117&0.894\\%
+0&f1&0.8896&0.708&0.8374\\%
+1&accuracy&0.89&0.7133&0.8374\\%
+2&roc\_auc&0.89&0.7135&0.8949\\%
 3&criterion&gini&log\_loss&log\_loss\\%
 4&splitter&best&best&best\\%
 5&max\_depth&None&None&40\\%
@@ -183,9 +185,9 @@ Index&Metric/Hyperp. \textbackslash{} Iteration&0&1&2\\%
 \hline%
 Index&Metric/Hyperp. \textbackslash{} Iteration&0&1&2\\%
 \hline%
-0&f1&0.834&0.8255&0.7888\\%
-1&accuracy&0.834&0.8256&0.7889\\%
-2&roc\_auc&0.917&0.9095&0.8748\\%
+0&f1&0.8338&0.8263&0.7899\\%
+1&accuracy&0.8339&0.8263&0.7899\\%
+2&roc\_auc&0.916&0.9101&0.8753\\%
 3&eval\_metric&logloss&logloss&logloss\\%
 4&n\_estimators&100&50&50\\%
 5&max\_depth&6&10&6\\%
@@ -199,6 +201,18 @@ Index&Metric/Hyperp. \textbackslash{} Iteration&0&1&2\\%
 \hline%
 \end{tabular}%
 \end{table}
+
+%
+\newpage%
+\subsection{Boxplots of accuracy, f1, roc\_auc}%
+\label{subsec:Boxplotsofaccuracy,f1,rocauc}%
+
+
+\begin{figure}[h!]%
+\centering%
+\includegraphics[width=460px]{Results/ModelOptimization/box_plots_metrics.png}%
+\caption{Boxplots of accuracy, f1, roc\_auc}%
+\end{figure}
 
 %
 \end{document}

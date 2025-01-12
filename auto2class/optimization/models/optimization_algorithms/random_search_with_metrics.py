@@ -85,7 +85,7 @@ class RandomSearchWithMetrics:
             }
 
             # Print the current results for the user (useful for monitoring)
-            print("Checked another model, results on train-set, using cross-validation:", avg_metrics)
+            print("Checked another model, results using cross-validation:", avg_metrics)
 
             # Add the hyperparameter values to the metrics dictionary
             avg_metrics.update(params)

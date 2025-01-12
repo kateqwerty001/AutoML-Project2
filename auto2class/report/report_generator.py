@@ -23,6 +23,16 @@ class ReportGenerator:
         self.optimizer.params_dt.columns = [col.replace('clf__', '') for col in self.optimizer.params_dt.columns]
         self.optimizer.params_xgb.columns = [col.replace('clf__', '') for col in self.optimizer.params_xgb.columns]
 
+        self.optimizer.metrics_xgb = self.optimizer.params_xgb[['f1', 'accuracy', 'roc_auc']]
+        self.optimizer.metrics_xgb['model'] = 'XGBoost'
+        self.optimizer.metrics_rf = self.optimizer.params_rf[['f1', 'accuracy', 'roc_auc']]
+        self.optimizer.metrics_rf['model'] = 'Random Forest'
+        self.optimizer.metrics_dt = self.optimizer.params_dt[['f1', 'accuracy', 'roc_auc']]
+        self.optimizer.metrics_dt['model'] = 'Decision Tree'
+        
+        self.metrics = pd.concat([self.optimizer.metrics_xgb, self.optimizer.metrics_rf, self.optimizer.metrics_dt])
+
+
     def make_small_margins(self):
         '''
         This method reduces the margins of the document to make it more compact
@@ -118,7 +128,7 @@ class ReportGenerator:
         with self.doc.create(Subsubsection('Bar Charts of Categorical columns')):
             # put image in the latex document
             with self.doc.create(Figure(position='h!')) as fig:
-                fig.add_image('EDA/bar_charts.png', width='460px')
+                fig.add_image('Results/EDA/bar_charts.png', width='460px')
                 fig.add_caption('Bar Charts of Categorical columns')
 
 
@@ -133,7 +143,7 @@ class ReportGenerator:
         with self.doc.create(Subsubsection('Histograms of Numerical columns')):
             # put image in the latex document
             with self.doc.create(Figure(position='h!')) as fig:
-                fig.add_image('EDA/histograms.png', width='460px')
+                fig.add_image('Results/EDA/histograms.png', width='460px')
                 fig.add_caption('Histograms of Numerical columns')
         return 
     
@@ -204,10 +214,19 @@ class ReportGenerator:
 
         self.new_page()
         with self.doc.create(Section('Model Optimization Results')):
-            self.print_dataframe(self.optimizer.params_rf.transpose().reset_index().rename(columns={"index": "Metric/Hyperp.\ Iteration"}), 'Random Forest Hyperparameters and achivied metrics', num_after_dot=4)
-            self.print_dataframe(self.optimizer.params_dt.transpose().reset_index().rename(columns={"index": "Metric/Hyperp. \ Iteration"}), 'Decision Tree Hyperparameters and achivied metrics', num_after_dot=4)
-            self.print_dataframe(self.optimizer.params_xgb.transpose().reset_index().rename(columns={"index": "Metric/Hyperp. \ Iteration"}), 'XGBoost Hyperparameters and achivied metrics', num_after_dot=4)
-        
+            with self.doc.create(Subsection('Optimization Results Tables')):
+                self.print_dataframe(self.optimizer.params_rf.transpose().reset_index().rename(columns={"index": "Metric/Hyperp.\ Iteration"}), 'Random Forest Hyperparameters and achivied metrics', num_after_dot=4)
+                self.print_dataframe(self.optimizer.params_dt.transpose().reset_index().rename(columns={"index": "Metric/Hyperp. \ Iteration"}), 'Decision Tree Hyperparameters and achivied metrics', num_after_dot=4)
+                self.print_dataframe(self.optimizer.params_xgb.transpose().reset_index().rename(columns={"index": "Metric/Hyperp. \ Iteration"}), 'XGBoost Hyperparameters and achivied metrics', num_after_dot=4)
+
+            self.new_page()
+            with self.doc.create(Subsection('Boxplots of accuracy, f1, roc_auc')):
+                plt = PlotGenerator().generate_box_plots_metrics(self.metrics)
+                # put image in the latex document
+                with self.doc.create(Figure(position='h!')) as fig:
+                    fig.add_image('Results/ModelOptimization/box_plots_metrics.png', width='460px')
+                    fig.add_caption('Boxplots of accuracy, f1, roc_auc')
+
         self.doc.generate_pdf('report', clean_tex=False)
 
     
