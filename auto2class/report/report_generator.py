@@ -7,20 +7,48 @@ import matplotlib.pyplot as plt
 import os
 import seaborn as sns
 from pylatex import Section, Subsection, Figure, NoEscape
+import seaborn as sns
+import matplotlib.pyplot as plt
+from .plot_generator import PlotGenerator
 
 class ReportGenerator:
-    def __init__(self, dataset, dataset_name):
+    def __init__(self, dataset, dataset_name, op):
         self.doc = Document()
         self.dataset = pd.DataFrame(dataset)
         self.dataset_name = dataset_name
+
+
+    def make_small_margins(self):
+        '''
+        This method reduces the margins of the document to make it more compact
+        '''
+        self.doc.packages.append(Command('usepackage', 'geometry'))
+        self.doc.packages.append(Command('geometry', 'margin=0.5in'))
+
+
+    def new_page(self):
+        '''
+        This method adds a new page to the report
+        '''
+        self.doc.append(NoEscape(r'\newpage'))
 
 
     def add_title(self):
         '''
         This method adds a title to the report
         '''
-        self.doc.preamble.append(Command('title', "Report created by Auto2Class on '" + self.dataset_name + "' dataset"))
+        self.doc.preamble.append(Command('title', "Report on " + self.dataset_name + " dataset"))
+        self.doc.preamble.append(Command('author', 'Auto2Class'))
         self.doc.append(NoEscape(r'\maketitle'))
+        self.new_page()   
+
+
+    def add_table_of_contents(self):
+        '''
+        This method adds a table of contents to the report
+        '''
+        self.doc.append(NoEscape(r'\tableofcontents'))
+        self.new_page()
 
 
     def add_info_table(self):
@@ -49,7 +77,6 @@ class ReportGenerator:
 
         with self.doc.create(Section('Exploratory Data Analysis Part')):
             with self.doc.create(Subsection('DataTypes and Non-Null Count')):
-                self.doc.append(NoEscape(r'Information is in table 1'))
                 # Create the table with a caption 
                 with self.doc.create(Table(position='h!')) as table:
                     table.add_caption('Dataset Columns Information')
@@ -70,6 +97,7 @@ class ReportGenerator:
             '''
             This method adds a table with the dataset's descriptive statistics (using .describe())
             '''
+            self.new_page()
             # Capture dataset.describe() into a buffer
             describe_data = self.dataset.describe().transpose()
 
@@ -78,7 +106,6 @@ class ReportGenerator:
             table_rows = describe_data.values.tolist()
 
             with self.doc.create(Subsection('Descriptive Statistics')):
-                self.doc.append(NoEscape(r'Information is in table 2'))
                 # Create the table with a caption 
                 with self.doc.create(Table(position='h!')) as table:
                     table.add_caption('Dataset Descriptive Statistics')
@@ -98,124 +125,53 @@ class ReportGenerator:
                             tabular.add_row([describe_data.index[i]] + row)
                         tabular.add_hline()
 
-
-    def add_correlation_matrix(self):
-        '''
-        This method adds a table with the dataset's correlation matrix
-
-        Not sure if we need this
-        '''
-        pass
-    
-    def add_scatter_plots(self):
-        '''
-        This method adds scatter plots for columns in the dataset
-
-        Not sure if we need this
-        '''
-        pass
-
     def add_bar_charts(self):
         '''
         This method adds bar charts for each categorical column in the dataset
         '''
-        import os
-        import seaborn as sns
-        import matplotlib.pyplot as plt
+        self.new_page()
 
-        categorical_columns = []
-        for column in self.dataset.columns:
-            if (self.dataset[column].dtype == 'object' and self.dataset[column].nunique() < 10) or (self.dataset[column].dtype == 'category' and self.dataset[column].nunique() < 10) or (self.dataset[column].dtype == 'bool'):
-                categorical_columns.append(column)
-
-        if len(categorical_columns) == 0:
+        plt = PlotGenerator().generate_bar_charts(self.dataset)
+        if plt is None:
             return
         
-        # Ensure the directory exists
-        os.makedirs('EDA/bar_charts', exist_ok=True)
-
-        with self.doc.create(Subsection('Bar Charts for Categorical Columns and Histograms for Numerical Columns')):
-            for column in categorical_columns:
-                plt.figure(figsize=(12, 6))
-                # Set larger font sizes for titles and labels
-                plt.title(f'Bar Chart for {column}', fontsize=20)
-                plt.xlabel(column, fontsize=18)
-                plt.ylabel('Count', fontsize=18)
-
-                # Plot the bar chart with Seaborn
-                sns.countplot(data=self.dataset, x=column, color="#581845", edgecolor='black', order=self.dataset[column].value_counts().index)
-
-                # Set tick label font size
-                plt.xticks(fontsize=16)
-                plt.yticks(fontsize=16)
-
-                # Save the bar chart
-                image_path = f'EDA/bar_charts/{column}_bar_chart.png'
-                plt.savefig(image_path)
-                plt.close()
-
-                # Include the image in the LaTeX document
-                with self.doc.create(Figure(position='h!')) as fig:
-                    fig.add_image(image_path, width='200px')
-                    fig.add_caption(f'Bar Chart of {column}')
+        with self.doc.create(Subsection('Bar Charts of Categorical columns')):
+            # put image in the latex document
+            with self.doc.create(Figure(position='h!')) as fig:
+                fig.add_image('EDA/bar_charts.png', width='460px')
+                fig.add_caption('Bar Charts of Categorical columns')
 
 
     def add_histograms(self):
         '''
         This method adds histograms for each numerical column in the dataset
         '''
-        numerical_columns = []
-        for column in self.dataset.columns:
-            if str(self.dataset[column].dtype).find('int')!=-1 or str(self.dataset[column].dtype).find('float')!=-1:
-                numerical_columns.append(column)
-
-        if len(numerical_columns) == 0:
+        self.new_page()
+        plt = PlotGenerator().generate_histograms(self.dataset)
+        if plt is None:
             return
         
-        # Ensure the directory exists
-        os.makedirs('EDA/histograms', exist_ok=True)
-
-        # find numerical columns
-        for column in numerical_columns:
-            # Create a histogram for the column
-            plt.figure(figsize=(12, 6))
-            self.dataset[column].plot(kind='hist', bins=20, color='#C70039', edgecolor='black')
-            plt.title(f'Histogram for {column}', fontsize=16)
-            plt.xlabel(column, fontsize=18)
-            plt.ylabel('Frequency', fontsize=18)
-
-            plt.xticks(fontsize=16)
-            plt.yticks(fontsize=16)
-            
-            # Save the histogram
-            image_path = f'EDA/histograms/{column}_histogram.png'
-            plt.savefig(image_path)
-            plt.close()
-
-            # Include the image in the LaTeX document
+        with self.doc.create(Subsection('Histograms of Numerical columns')):
+            # put image in the latex document
             with self.doc.create(Figure(position='h!')) as fig:
-                fig.add_image(image_path, width='200px')
-                fig.add_caption(f'Histogram of {column}')
+                fig.add_image('EDA/histograms.png', width='460px')
+                fig.add_caption('Histograms of Numerical columns')
+        return 
                         
 
     def generate_report(self):
         '''
         This method generates the report
         '''
+        self.make_small_margins()  # Reduce the margins of the document
         self.add_title()  # Add the title to the report
+        self.add_table_of_contents()  # Add table of contents
 
         self.add_info_table()  # Add dataset info() table
-
-        self.doc.append(NoEscape(r'\newpage'))
         self.add_describe_info()  # Add dataset describe() table
 
-        self.doc.append(NoEscape(r'\newpage'))
-        self.add_bar_charts()  # Add bar charts for categorical columns
-
-        # self.add_correlation_matrix()
-        # self.add_scatter_plots()
-
-        self.add_histograms()
+        self.add_histograms() # Add histograms for numerical columns
+        self.add_bar_charts() # Add bar charts for categorical columns
         
         self.doc.generate_pdf('report', clean_tex=False)
 

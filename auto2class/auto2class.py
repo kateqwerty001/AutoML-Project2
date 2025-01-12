@@ -1,5 +1,6 @@
 from .optimization.optimizer_all_models import OptimizerAllModels
 from .preprocessing.data_preprocessor import DataPreprocessor
+from .report.report_generator import ReportGenerator
 
 class Auto2Class:
     def __init__(self, dataframe, target_column_name, test_size=0.2, random_state=42, n_iter=10, cv=5, n_repeats=1, metric = 'roc_auc'):
@@ -47,3 +48,19 @@ class Auto2Class:
         self.params_dt = self.optimizer.params_dt
         self.params_xgb = self.optimizer.params_xgb
         return 
+    
+    def generate_report(self, dataset_name):
+        """
+        Generate a report containing the results and information about dataeset.
+        """
+        if self.optimizer is None:
+            raise ValueError("Model selection has not been performed. Please run perform_model_selection() first.")
+        
+        # rename column 'target' to target_column_name
+        self.dataframe.rename(columns={'target': self.target_column_name}, inplace=True)
+
+        self.report_generator = ReportGenerator(self.dataframe, dataset_name, self.optimizer)
+        self.report_generator.generate_report()
+
+        print("Report generated successfully.")
+        return

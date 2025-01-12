@@ -1,7 +1,7 @@
 from sklearn.tree import DecisionTreeClassifier
 from sklearn.pipeline import Pipeline
 import pandas as pd
-from random_search_with_metrics import RandomSearchWithMetrics
+from .optimization_algorithms.random_search_with_metrics import RandomSearchWithMetrics
 from sklearn.metrics import f1_score, roc_auc_score, accuracy_score
 from sklearn.model_selection import train_test_split
 
