@@ -6,17 +6,22 @@ import io
 import matplotlib.pyplot as plt
 import os
 import seaborn as sns
-from pylatex import Section, Subsection, Figure, NoEscape
+from pylatex import Section, Subsection, Figure, NoEscape, Subsubsection
 import seaborn as sns
 import matplotlib.pyplot as plt
 from .plot_generator import PlotGenerator
 
 class ReportGenerator:
-    def __init__(self, dataset, dataset_name, op):
+    def __init__(self, dataset, dataset_name, optimizer):
         self.doc = Document()
         self.dataset = pd.DataFrame(dataset)
         self.dataset_name = dataset_name
+        self.optimizer = optimizer
 
+        # delete clf__ from the column names
+        self.optimizer.params_rf.columns = [col.replace('clf__', '') for col in self.optimizer.params_rf.columns]
+        self.optimizer.params_dt.columns = [col.replace('clf__', '') for col in self.optimizer.params_dt.columns]
+        self.optimizer.params_xgb.columns = [col.replace('clf__', '') for col in self.optimizer.params_xgb.columns]
 
     def make_small_margins(self):
         '''
@@ -75,55 +80,30 @@ class ReportGenerator:
                 dtype = parts[-1]
                 table_rows.append([column_name, non_null_count, dtype])
 
-        with self.doc.create(Section('Exploratory Data Analysis Part')):
-            with self.doc.create(Subsection('DataTypes and Non-Null Count')):
-                # Create the table with a caption 
-                with self.doc.create(Table(position='h!')) as table:
-                    table.add_caption('Dataset Columns Information')
+        # Convert extracted information to a dataframe
+        info_df = pd.DataFrame(table_rows, columns=header)
 
-                    self.doc.append(NoEscape(r'\vspace{0.2cm}'))
-
-                    self.doc.append(NoEscape(r'\centering')) # center the table
-
-                    with table.create(Tabular('|c|c|c|')) as tabular:
-                        tabular.add_hline()
-                        tabular.add_row(header)
-                        tabular.add_hline()
-                        for row in table_rows:
-                            tabular.add_row(row)
-                        tabular.add_hline()
+        # Use the print_dataframe method to print the dataframe
+        self.print_dataframe(
+            df=info_df,
+            caption='Dataset Columns Information',
+            num_after_dot=0
+        )
 
     def add_describe_info(self):
-            '''
-            This method adds a table with the dataset's descriptive statistics (using .describe())
-            '''
-            self.new_page()
-            # Capture dataset.describe() into a buffer
-            describe_data = self.dataset.describe().transpose()
+        '''
+        This method adds a table with the dataset's descriptive statistics (using .describe())
+        '''
+        # Calculate descriptive statistics and reset the index to include row labels
+        describe_data = self.dataset.describe().transpose().reset_index()
+        describe_data.rename(columns={'index': 'Column Name/Statistic'}, inplace=True)
 
-            # Extract header and rows for descriptive statistics
-            header = list(describe_data.columns)
-            table_rows = describe_data.values.tolist()
-
-            with self.doc.create(Subsection('Descriptive Statistics')):
-                # Create the table with a caption 
-                with self.doc.create(Table(position='h!')) as table:
-                    table.add_caption('Dataset Descriptive Statistics')
-
-                    self.doc.append(NoEscape(r'\vspace{0.2cm}'))
-
-                    self.doc.append(NoEscape(r'\centering'))  # center the table
-
-                    # Adjust the number of columns to match the data (1 column for "Statistic" and columns for each statistic)
-                    with table.create(Tabular('|c|' + 'c|' * len(header))) as tabular:
-                        tabular.add_hline()
-                        tabular.add_row(['Statistic'] + header)  # Add a 'Statistic' column
-                        tabular.add_hline()
-                        for i, row in enumerate(table_rows):
-                            # Round float values to 2 decimal places if they are floats
-                            row = [round(x, 2) if isinstance(x, float) else x for x in row]
-                            tabular.add_row([describe_data.index[i]] + row)
-                        tabular.add_hline()
+        # Use the print_dataframe method to print the dataframe
+        self.print_dataframe(
+            df=describe_data,
+            caption='Dataset Descriptive Statistics',
+            num_after_dot=2
+        )
 
     def add_bar_charts(self):
         '''
@@ -135,7 +115,7 @@ class ReportGenerator:
         if plt is None:
             return
         
-        with self.doc.create(Subsection('Bar Charts of Categorical columns')):
+        with self.doc.create(Subsubsection('Bar Charts of Categorical columns')):
             # put image in the latex document
             with self.doc.create(Figure(position='h!')) as fig:
                 fig.add_image('EDA/bar_charts.png', width='460px')
@@ -146,17 +126,59 @@ class ReportGenerator:
         '''
         This method adds histograms for each numerical column in the dataset
         '''
-        self.new_page()
         plt = PlotGenerator().generate_histograms(self.dataset)
         if plt is None:
             return
         
-        with self.doc.create(Subsection('Histograms of Numerical columns')):
+        with self.doc.create(Subsubsection('Histograms of Numerical columns')):
             # put image in the latex document
             with self.doc.create(Figure(position='h!')) as fig:
                 fig.add_image('EDA/histograms.png', width='460px')
                 fig.add_caption('Histograms of Numerical columns')
         return 
+    
+    
+    def print_dataframe(self, df, caption, num_after_dot=2, no_index=False):
+        '''
+        This method prints the entire dataframe to the report.
+
+        Args:
+            df: The dataframe to be printed in the report.
+            caption: The caption for the table in the report.
+            num_after_dot: The number of decimal places to round numerical values in the dataframe.
+        '''
+        # Create the table with a caption
+        with self.doc.create(Table(position='h!')) as table:
+            table.add_caption(caption)
+
+            self.doc.append(NoEscape(r'\vspace{0.2cm}')) # Add vertical space
+            self.doc.append(NoEscape(r'\centering'))  # Center the table
+
+            # Extract header and rows from the dataframe
+            header = list(df.columns)
+            table_rows = df.values.tolist()
+
+            # Round numerical values to the specified number of decimal places
+            rounded_rows = []
+            for row in table_rows:
+                rounded_row = [
+                    round(value, num_after_dot) if isinstance(value, (float, int)) else value
+                    for value in row
+                ]
+                rounded_rows.append(rounded_row)
+
+            # Adjust the number of columns to match the dataframe
+            with table.create(Tabular('|c|' * (len(header) + 1))) as tabular:
+                tabular.add_hline()
+                if no_index==False:
+                    tabular.add_row(['Index'] + header)  # Add index column
+                tabular.add_hline()
+
+                # Add all rows to the table
+                for i, row in enumerate(rounded_rows):
+                    tabular.add_row([i] + row)
+
+                tabular.add_hline()
                         
 
     def generate_report(self):
@@ -167,11 +189,26 @@ class ReportGenerator:
         self.add_title()  # Add the title to the report
         self.add_table_of_contents()  # Add table of contents
 
-        self.add_info_table()  # Add dataset info() table
-        self.add_describe_info()  # Add dataset describe() table
+        with self.doc.create(Section('Exploratory Data Analysis')):
 
-        self.add_histograms() # Add histograms for numerical columns
-        self.add_bar_charts() # Add bar charts for categorical columns
+            with self.doc.create(Subsection('Non-Null Count, Dtype of features')):
+                self.add_info_table()  # Add dataset info() table
+
+            with self.doc.create(Subsection('Descriptive Statistics')):
+                self.add_describe_info()  # Add dataset describe() table
+            
+            self.new_page()
+            with self.doc.create(Subsection('Distribution of features')):
+                self.add_histograms() # Add histograms for numerical columns
+                self.add_bar_charts() # Add bar charts for categorical columns
+
+        self.new_page()
+        with self.doc.create(Section('Model Optimization Results')):
+            self.print_dataframe(self.optimizer.params_rf.transpose().reset_index().rename(columns={"index": "Metric/Hyperp.\ Iteration"}), 'Random Forest Hyperparameters and achivied metrics', num_after_dot=4)
+            self.print_dataframe(self.optimizer.params_dt.transpose().reset_index().rename(columns={"index": "Metric/Hyperp. \ Iteration"}), 'Decision Tree Hyperparameters and achivied metrics', num_after_dot=4)
+            self.print_dataframe(self.optimizer.params_xgb.transpose().reset_index().rename(columns={"index": "Metric/Hyperp. \ Iteration"}), 'XGBoost Hyperparameters and achivied metrics', num_after_dot=4)
         
         self.doc.generate_pdf('report', clean_tex=False)
+
+    
 

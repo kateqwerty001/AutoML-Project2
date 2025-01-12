@@ -92,7 +92,7 @@ class OptimizerAllModels:
         print("---Performing hyperparameter tuning for RandomForestClassifier...")
         self.params_rf = tuner_rand_forest.get_results()
 
-        # print("---Performing hyperparameter tuning for XGBoostClassifier...")
+        print("---Performing hyperparameter tuning for XGBoostClassifier...")
         self.params_xgb = tuner_xgboost.get_results()
 
     def get_best_results(self):

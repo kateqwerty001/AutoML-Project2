@@ -25,15 +25,18 @@ class PlotGenerator:
         n_rows = (len(numeric_columns) + n_cols - 1) // n_cols  # Calculate number of rows
 
         # Creating subplots
-        fig, axes = plt.subplots(n_rows, n_cols, figsize=(n_cols * 5, n_rows * 5))
+        fig, axes = plt.subplots(n_rows, n_cols, figsize=(n_cols * 6, n_rows * 6))
 
         # Flatten the axes array in case there are multiple rows
         axes = axes.flatten()
 
         # Plotting histograms for each numeric column
         for i, column in enumerate(numeric_columns):
-            sns.histplot(data[column], kde=True, ax=axes[i], color='blue')
-            axes[i].set_title(column)
+            sns.histplot(data[column], kde=True, ax=axes[i], color='blue', bins=20)
+            axes[i].set_title(column, fontsize=16)  
+            axes[i].tick_params(axis='both', labelsize=14)  
+            axes[i].set_xlabel(axes[i].get_xlabel(), fontsize=14)  
+            axes[i].set_ylabel(axes[i].get_ylabel(), fontsize=14)
 
         # Turn off axes for any unused subplots
         for j in range(i + 1, len(axes)):
@@ -66,24 +69,29 @@ class PlotGenerator:
             return None
 
         # Number of rows and columns for subplots based on the number of categorical columns
-        n_cols = 4  
+        n_cols = 4
         n_rows = (len(categorical_columns) + n_cols - 1) // n_cols  # Calculate number of rows
 
         # Creating subplots
-        fig, axes = plt.subplots(n_rows, n_cols, figsize=(n_cols * 5, n_rows * 5))
+        fig, axes = plt.subplots(n_rows, n_cols, figsize=(n_cols * 5.8, n_rows * 5.8))
 
         # Flatten the axes array in case there are multiple rows
         axes = axes.flatten()
 
         # Plotting bar plots for each categorical column
         for i, column in enumerate(categorical_columns):
-            sns.countplot(x=data[column], ax=axes[i])
-            axes[i].set_title(column)
-            axes[i].tick_params(axis='x', rotation=45)  # Rotate x-axis labels for better readability
+            sns.countplot(x=data[column], ax=axes[i], color='#BD1052')  
+            axes[i].set_title(column, fontsize=16)  
+            axes[i].tick_params(axis='x', rotation=45, labelsize=14)  
+            axes[i].tick_params(axis='y', labelsize=14)  
+            axes[i].set_xlabel(axes[i].get_xlabel(), fontsize=14)  
+            axes[i].set_ylabel(axes[i].get_ylabel(), fontsize=14)  
 
         # Turn off axes for any unused subplots
         for j in range(i + 1, len(axes)):
             axes[j].axis('off')
+
+        plt.subplots_adjust(hspace=0.4, wspace=0.4)
 
         # Save to EDA
         os.makedirs('EDA', exist_ok=True)
