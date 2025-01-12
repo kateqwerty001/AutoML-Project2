@@ -8,8 +8,11 @@
 \geometry{margin=0.5in}%
 \usepackage{graphicx}%
 %
-\title{Report on Weather Australia dataset}%
+\title{Report on PlacementData dataset}%
 \author{Auto2Class}%
+\usepackage{amsmath}%
+\usepackage{amssymb}%
+\usepackage{enumitem}%
 %
 \begin{document}%
 \normalsize%
@@ -31,29 +34,21 @@
 \hline%
 Index&Column&Non{-}Null Count&Dtype\\%
 \hline%
-0&Date&145460&object\\%
-1&Location&145460&object\\%
-2&MinTemp&143975&float64\\%
-3&MaxTemp&144199&float64\\%
-4&Rainfall&142199&float64\\%
-5&Evaporation&82670&float64\\%
-6&Sunshine&75625&float64\\%
-7&WindGustDir&135134&object\\%
-8&WindGustSpeed&135197&float64\\%
-9&WindDir9am&134894&object\\%
-10&WindDir3pm&141232&object\\%
-11&WindSpeed9am&143693&float64\\%
-12&WindSpeed3pm&142398&float64\\%
-13&Humidity9am&142806&float64\\%
-14&Humidity3pm&140953&float64\\%
-15&Pressure9am&130395&float64\\%
-16&Pressure3pm&130432&float64\\%
-17&Cloud9am&89572&float64\\%
-18&Cloud3pm&86102&float64\\%
-19&Temp9am&143693&float64\\%
-20&Temp3pm&141851&float64\\%
-21&RainToday&142199&object\\%
-22&RainTomorrow&142193&object\\%
+0&sl\_no&215&int64\\%
+1&gender&215&object\\%
+2&ssc\_p&215&float64\\%
+3&ssc\_b&215&object\\%
+4&hsc\_p&215&float64\\%
+5&hsc\_b&215&object\\%
+6&hsc\_s&215&object\\%
+7&degree\_p&215&float64\\%
+8&degree\_t&215&object\\%
+9&workex&215&object\\%
+10&etest\_p&215&float64\\%
+11&specialisation&215&object\\%
+12&mba\_p&215&float64\\%
+13&status&215&object\\%
+14&salary&148&float64\\%
 \hline%
 \end{tabular}%
 \end{table}
@@ -71,22 +66,13 @@ Index&Column&Non{-}Null Count&Dtype\\%
 \hline%
 Index&Column Name/Statistic&count&mean&std&min&25\%&50\%&75\%&max\\%
 \hline%
-0&MinTemp&143975.0&12.19&6.4&{-}8.5&7.6&12.0&16.9&33.9\\%
-1&MaxTemp&144199.0&23.22&7.12&{-}4.8&17.9&22.6&28.2&48.1\\%
-2&Rainfall&142199.0&2.36&8.48&0.0&0.0&0.0&0.8&371.0\\%
-3&Evaporation&82670.0&5.47&4.19&0.0&2.6&4.8&7.4&145.0\\%
-4&Sunshine&75625.0&7.61&3.79&0.0&4.8&8.4&10.6&14.5\\%
-5&WindGustSpeed&135197.0&40.04&13.61&6.0&31.0&39.0&48.0&135.0\\%
-6&WindSpeed9am&143693.0&14.04&8.92&0.0&7.0&13.0&19.0&130.0\\%
-7&WindSpeed3pm&142398.0&18.66&8.81&0.0&13.0&19.0&24.0&87.0\\%
-8&Humidity9am&142806.0&68.88&19.03&0.0&57.0&70.0&83.0&100.0\\%
-9&Humidity3pm&140953.0&51.54&20.8&0.0&37.0&52.0&66.0&100.0\\%
-10&Pressure9am&130395.0&1017.65&7.11&980.5&1012.9&1017.6&1022.4&1041.0\\%
-11&Pressure3pm&130432.0&1015.26&7.04&977.1&1010.4&1015.2&1020.0&1039.6\\%
-12&Cloud9am&89572.0&4.45&2.89&0.0&1.0&5.0&7.0&9.0\\%
-13&Cloud3pm&86102.0&4.51&2.72&0.0&2.0&5.0&7.0&9.0\\%
-14&Temp9am&143693.0&16.99&6.49&{-}7.2&12.3&16.7&21.6&40.2\\%
-15&Temp3pm&141851.0&21.68&6.94&{-}5.4&16.6&21.1&26.4&46.7\\%
+0&sl\_no&215.0&108.0&62.21&1.0&54.5&108.0&161.5&215.0\\%
+1&ssc\_p&215.0&67.3&10.83&40.89&60.6&67.0&75.7&89.4\\%
+2&hsc\_p&215.0&66.33&10.9&37.0&60.9&65.0&73.0&97.7\\%
+3&degree\_p&215.0&66.37&7.36&50.0&61.0&66.0&72.0&91.0\\%
+4&etest\_p&215.0&72.1&13.28&50.0&60.0&71.0&83.5&98.0\\%
+5&mba\_p&215.0&62.28&5.83&51.21&57.95&62.0&66.25&77.89\\%
+6&salary&148.0&288655.41&93457.45&200000.0&240000.0&265000.0&300000.0&940000.0\\%
 \hline%
 \end{tabular}%
 \end{table}
@@ -119,6 +105,70 @@ Index&Column Name/Statistic&count&mean&std&min&25\%&50\%&75\%&max\\%
 
 %
 \newpage%
+\section{Evaluation Metrics}%
+\label{sec:EvaluationMetrics}%
+\subsection{Accuracy}%
+\label{subsec:Accuracy}%
+
+                \textbf{Accuracy} is one of the simplest evaluation metrics for classification models. 
+                It is defined as the ratio of correctly predicted observations to the total number of observations:
+
+                \[
+                \text{Accuracy} = \frac{\text{Number of Correct Predictions}}{\text{Total Number of Predictions}}
+                \]
+
+                While accuracy is intuitive and easy to understand, it may not be suitable for imbalanced datasets. 
+                For example, in a dataset where 95\% of the samples belong to one class, predicting the majority class for every instance 
+                would result in high accuracy but poor performance on the minority class.
+                
+
+%
+\subsection{F1 Score}%
+\label{subsec:F1Score}%
+
+                The \textbf{F1 Score} is the harmonic mean of Precision and Recall, providing a balance between the two. 
+                It is particularly useful when dealing with imbalanced datasets. Precision and Recall are defined as follows:
+
+                \[
+                \text{Precision} = \frac{\text{True Positives}}{\text{True Positives} + \text{False Positives}}
+                \]
+                \[
+                \text{Recall} = \frac{\text{True Positives}}{\text{True Positives} + \text{False Negatives}}
+                \]
+
+                The F1 Score combines these metrics:
+
+                \[
+                \text{F1 Score} = 2 \cdot \frac{\text{Precision} \cdot \text{Recall}}{\text{Precision} + \text{Recall}}
+                \]
+
+                A high F1 Score indicates a good balance between Precision and Recall, making it a valuable metric in scenarios where false positives 
+                and false negatives have significant costs.
+                
+
+%
+\subsection{ROC AUC}%
+\label{subsec:ROCAUC}%
+
+                The Receiver Operating Characteristic (ROC) curve plots the True Positive Rate (Recall) against the False Positive Rate at various threshold settings. 
+                The \textbf{Area Under the Curve (AUC) of the ROC curve} measures the overall ability of the model to distinguish between classes. 
+
+                \[
+                \text{AUC} = \int_{\text{FPR}=0}^{1} \text{TPR}(\text{FPR}) \, d(\text{FPR})
+                \]
+
+                Key points about ROC AUC:
+                \begin{itemize}
+                    \item An AUC of 0.5 indicates random guessing.
+                    \item An AUC of 1.0 indicates perfect classification.
+                    \item It is a threshold-independent metric, providing an aggregate measure of performance across all classification thresholds.
+                \end{itemize}
+
+                ROC AUC is particularly useful for binary classification tasks and provides insights into the trade-off between sensitivity and specificity.
+                
+
+%
+\newpage%
 \section{Model Optimization Results}%
 \label{sec:ModelOptimizationResults}%
 \subsection{Optimization Results Tables}%
@@ -129,21 +179,21 @@ Index&Column Name/Statistic&count&mean&std&min&25\%&50\%&75\%&max\\%
 \caption{Random Forest Hyperparameters and achivied metrics}%
 \vspace{0.2cm}%
 \centering%
-\begin{tabular}{|c||c||c||c||c|}%
+\begin{tabular}{|c||c||c||c||c||c||c||c||c||c|}%
 \hline%
-Index&Metric/Hyperp.\textbackslash{} Iteration&0&1&2\\%
+Index&Metric/Hyperp.\textbackslash{} Iteration&0&1&2&3&4&5&6&7\\%
 \hline%
-0&f1&0.9314&0.7738&0.9278\\%
-1&accuracy&0.9314&0.7738&0.9279\\%
-2&roc\_auc&0.9837&0.8582&0.9825\\%
-3&n\_estimators&100&50&50\\%
-4&criterion&gini&gini&log\_loss\\%
-5&max\_depth&None&20&30\\%
-6&min\_samples\_split&2&2&2\\%
-7&min\_samples\_leaf&1&1&1\\%
-8&min\_weight\_fraction\_leaf&0.0&0.01&0.0\\%
-9&max\_features&sqrt&log2&None\\%
-10&bootstrap&1&1&1\\%
+0&f1&1.0&0.9797&0.9797&0.8884&0.9527&0.973&0.8004&0.973\\%
+1&accuracy&1.0&0.9797&0.9797&0.8885&0.9527&0.973&0.8007&0.973\\%
+2&roc\_auc&1.0&0.9969&0.9973&0.9619&0.9923&0.9987&0.9089&0.9981\\%
+3&n\_estimators&100&50&50&50&200&100&200&200\\%
+4&criterion&gini&gini&log\_loss&log\_loss&gini&entropy&gini&log\_loss\\%
+5&max\_depth&None&20&30&10&10&None&30&10\\%
+6&min\_samples\_split&2&2&2&10&10&2&10&10\\%
+7&min\_samples\_leaf&1&1&1&4&2&2&1&1\\%
+8&min\_weight\_fraction\_leaf&0.0&0.01&0.0&0.1&0.05&0.0&0.1&0.0\\%
+9&max\_features&sqrt&log2&None&None&sqrt&sqrt&None&log2\\%
+10&bootstrap&1&1&1&0&1&0&0&1\\%
 \hline%
 \end{tabular}%
 \end{table}
@@ -155,21 +205,21 @@ Index&Metric/Hyperp.\textbackslash{} Iteration&0&1&2\\%
 \caption{Decision Tree Hyperparameters and achivied metrics}%
 \vspace{0.2cm}%
 \centering%
-\begin{tabular}{|c||c||c||c||c|}%
+\begin{tabular}{|c||c||c||c||c||c||c||c||c||c|}%
 \hline%
-Index&Metric/Hyperp. \textbackslash{} Iteration&0&1&2\\%
+Index&Metric/Hyperp. \textbackslash{} Iteration&0&1&2&3&4&5&6&7\\%
 \hline%
-0&f1&0.8896&0.708&0.8374\\%
-1&accuracy&0.89&0.7133&0.8374\\%
-2&roc\_auc&0.89&0.7135&0.8949\\%
-3&criterion&gini&log\_loss&log\_loss\\%
-4&splitter&best&best&best\\%
-5&max\_depth&None&None&40\\%
-6&min\_samples\_split&2&10&2\\%
-7&min\_samples\_leaf&1&2&4\\%
-8&max\_features&None&None&sqrt\\%
-9&class\_weight&None&None&None\\%
-10&min\_impurity\_decrease&0.0&0.1&0.0\\%
+0&f1&0.9667&0.9051&0.8682&0.9561&0.7582&0.9797&0.902&0.7593\\%
+1&accuracy&0.9667&0.9054&0.8682&0.9561&0.7635&0.9797&0.902&0.7601\\%
+2&roc\_auc&0.9667&0.9491&0.9089&0.9642&0.8257&0.9797&0.9377&0.797\\%
+3&criterion&gini&log\_loss&log\_loss&gini&gini&entropy&entropy&entropy\\%
+4&splitter&best&best&best&best&random&best&random&best\\%
+5&max\_depth&None&None&40&10&40&10&40&40\\%
+6&min\_samples\_split&2&10&2&10&5&5&5&5\\%
+7&min\_samples\_leaf&1&2&4&4&1&1&1&4\\%
+8&max\_features&None&None&sqrt&None&None&None&log2&log2\\%
+9&class\_weight&None&None&None&None&balanced&balanced&balanced&balanced\\%
+10&min\_impurity\_decrease&0.0&0.1&0.0&0.01&0.05&0.0&0.0&0.1\\%
 \hline%
 \end{tabular}%
 \end{table}
@@ -181,23 +231,23 @@ Index&Metric/Hyperp. \textbackslash{} Iteration&0&1&2\\%
 \caption{XGBoost Hyperparameters and achivied metrics}%
 \vspace{0.2cm}%
 \centering%
-\begin{tabular}{|c||c||c||c||c|}%
+\begin{tabular}{|c||c||c||c||c||c||c||c||c||c|}%
 \hline%
-Index&Metric/Hyperp. \textbackslash{} Iteration&0&1&2\\%
+Index&Metric/Hyperp. \textbackslash{} Iteration&0&1&2&3&4&5&6&7\\%
 \hline%
-0&f1&0.8338&0.8263&0.7899\\%
-1&accuracy&0.8339&0.8263&0.7899\\%
-2&roc\_auc&0.916&0.9101&0.8753\\%
-3&eval\_metric&logloss&logloss&logloss\\%
-4&n\_estimators&100&50&50\\%
-5&max\_depth&6&10&6\\%
-6&learning\_rate&0.3&0.05&0.05\\%
-7&subsample&1.0&0.7&0.5\\%
-8&colsample\_bytree&1.0&0.7&0.7\\%
-9&min\_child\_weight&1&1&7\\%
-10&gamma&0.0&0.0&0.1\\%
-11&reg\_alpha&0&1&1\\%
-12&reg\_lambda&1&1&2\\%
+0&f1&1.0&0.9763&0.8649&0.9831&0.9696&0.9595&0.973&0.9865\\%
+1&accuracy&1.0&0.9764&0.8649&0.9831&0.9696&0.9595&0.973&0.9865\\%
+2&roc\_auc&1.0&0.9984&0.9418&0.9993&0.9979&0.9948&0.9951&0.9996\\%
+3&eval\_metric&logloss&logloss&logloss&logloss&logloss&logloss&logloss&logloss\\%
+4&n\_estimators&100&50&50&100&50&200&200&100\\%
+5&max\_depth&6&10&6&15&10&6&15&6\\%
+6&learning\_rate&0.3&0.05&0.05&0.1&0.1&0.01&0.1&0.2\\%
+7&subsample&1.0&0.7&0.5&0.9&0.9&0.5&0.7&1.0\\%
+8&colsample\_bytree&1.0&0.7&0.7&0.7&0.5&0.7&0.9&0.9\\%
+9&min\_child\_weight&1&1&7&3&7&5&5&3\\%
+10&gamma&0.0&0.0&0.1&0.2&0.0&0.0&0.1&0.2\\%
+11&reg\_alpha&0.0&1.0&1.0&0.0&1.0&0.01&0.1&0.0\\%
+12&reg\_lambda&1.0&1.0&2.0&1.0&1.0&1.0&1.0&1.5\\%
 \hline%
 \end{tabular}%
 \end{table}

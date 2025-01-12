@@ -3,12 +3,7 @@ from pylatex.utils import NoEscape
 from pylatex.table import Table 
 import pandas as pd
 import io
-import matplotlib.pyplot as plt
-import os
-import seaborn as sns
 from pylatex import Section, Subsection, Figure, NoEscape, Subsubsection
-import seaborn as sns
-import matplotlib.pyplot as plt
 from .plot_generator import PlotGenerator
 
 class ReportGenerator:
@@ -121,7 +116,7 @@ class ReportGenerator:
         '''
         self.new_page()
 
-        plt = PlotGenerator().generate_bar_charts(self.dataset)
+        plt = PlotGenerator().generate_bar_charts(self.dataset, self.dataset_name)
         if plt is None:
             return
         
@@ -136,7 +131,7 @@ class ReportGenerator:
         '''
         This method adds histograms for each numerical column in the dataset
         '''
-        plt = PlotGenerator().generate_histograms(self.dataset)
+        plt = PlotGenerator().generate_histograms(self.dataset, self.dataset_name)
         if plt is None:
             return
         
@@ -146,7 +141,78 @@ class ReportGenerator:
                 fig.add_image('Results/EDA/histograms.png', width='460px')
                 fig.add_caption('Histograms of Numerical columns')
         return 
-    
+        
+    def add_metrics_description(self):
+        """
+        Adds a section describing evaluation metrics to the LaTeX document.
+        """
+        # Add required packages to the preamble
+        self.doc.preamble.append(NoEscape(r'\usepackage{amsmath}'))
+        self.doc.preamble.append(NoEscape(r'\usepackage{amssymb}'))
+        self.doc.preamble.append(NoEscape(r'\usepackage{enumitem}'))
+
+        # Add the Evaluation Metrics section
+        with self.doc.create(Section('Evaluation Metrics')):
+            
+            # Accuracy subsection
+            with self.doc.create(Subsection('Accuracy')):
+                self.doc.append(NoEscape(r"""
+                \textbf{Accuracy} is one of the simplest evaluation metrics for classification models. 
+                It is defined as the ratio of correctly predicted observations to the total number of observations:
+
+                \[
+                \text{Accuracy} = \frac{\text{Number of Correct Predictions}}{\text{Total Number of Predictions}}
+                \]
+
+                While accuracy is intuitive and easy to understand, it may not be suitable for imbalanced datasets. 
+                For example, in a dataset where 95\% of the samples belong to one class, predicting the majority class for every instance 
+                would result in high accuracy but poor performance on the minority class.
+                """))
+
+            # F1 Score subsection
+            with self.doc.create(Subsection('F1 Score')):
+                self.doc.append(NoEscape(r"""
+                The \textbf{F1 Score} is the harmonic mean of Precision and Recall, providing a balance between the two. 
+                It is particularly useful when dealing with imbalanced datasets. Precision and Recall are defined as follows:
+
+                \[
+                \text{Precision} = \frac{\text{True Positives}}{\text{True Positives} + \text{False Positives}}
+                \]
+                \[
+                \text{Recall} = \frac{\text{True Positives}}{\text{True Positives} + \text{False Negatives}}
+                \]
+
+                The F1 Score combines these metrics:
+
+                \[
+                \text{F1 Score} = 2 \cdot \frac{\text{Precision} \cdot \text{Recall}}{\text{Precision} + \text{Recall}}
+                \]
+
+                A high F1 Score indicates a good balance between Precision and Recall, making it a valuable metric in scenarios where false positives 
+                and false negatives have significant costs.
+                """))
+
+            # ROC AUC subsection
+            with self.doc.create(Subsection('ROC AUC')):
+                self.doc.append(NoEscape(r"""
+                The Receiver Operating Characteristic (ROC) curve plots the True Positive Rate (Recall) against the False Positive Rate at various threshold settings. 
+                The \textbf{Area Under the Curve (AUC) of the ROC curve} measures the overall ability of the model to distinguish between classes. 
+
+                \[
+                \text{AUC} = \int_{\text{FPR}=0}^{1} \text{TPR}(\text{FPR}) \, d(\text{FPR})
+                \]
+
+                Key points about ROC AUC:
+                \begin{itemize}
+                    \item An AUC of 0.5 indicates random guessing.
+                    \item An AUC of 1.0 indicates perfect classification.
+                    \item It is a threshold-independent metric, providing an aggregate measure of performance across all classification thresholds.
+                \end{itemize}
+
+                ROC AUC is particularly useful for binary classification tasks and provides insights into the trade-off between sensitivity and specificity.
+                """))
+
+        
     
     def print_dataframe(self, df, caption, num_after_dot=2, no_index=False):
         '''
@@ -193,7 +259,7 @@ class ReportGenerator:
 
     def generate_report(self):
         '''
-        This method generates the report
+        This method generates the report, using the methods defined above.
         '''
         self.make_small_margins()  # Reduce the margins of the document
         self.add_title()  # Add the title to the report
@@ -213,6 +279,9 @@ class ReportGenerator:
                 self.add_bar_charts() # Add bar charts for categorical columns
 
         self.new_page()
+        self.add_metrics_description()
+
+        self.new_page()
         with self.doc.create(Section('Model Optimization Results')):
             with self.doc.create(Subsection('Optimization Results Tables')):
                 self.print_dataframe(self.optimizer.params_rf.transpose().reset_index().rename(columns={"index": "Metric/Hyperp.\ Iteration"}), 'Random Forest Hyperparameters and achivied metrics', num_after_dot=4)
@@ -221,13 +290,14 @@ class ReportGenerator:
 
             self.new_page()
             with self.doc.create(Subsection('Boxplots of accuracy, f1, roc_auc')):
-                plt = PlotGenerator().generate_box_plots_metrics(self.metrics)
+                plt = PlotGenerator().generate_box_plots_metrics(self.metrics, self.dataset_name)
                 # put image in the latex document
                 with self.doc.create(Figure(position='h!')) as fig:
                     fig.add_image('Results/ModelOptimization/box_plots_metrics.png', width='460px')
                     fig.add_caption('Boxplots of accuracy, f1, roc_auc')
 
         self.doc.generate_pdf('report', clean_tex=False)
+
 
     
 

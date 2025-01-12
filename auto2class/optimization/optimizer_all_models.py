@@ -6,13 +6,12 @@ from sklearn.metrics import roc_auc_score, accuracy_score, f1_score
 import pandas as pd
 
 class OptimizerAllModels:
-    def __init__(self, dataset, test_size=0.2, random_state=42, n_iter=10, cv=5, n_repeats=1, metric_to_eval = 'roc_auc'):
+    def __init__(self, dataset, random_state=42, n_iter=[3, 3, 3], cv=5, n_repeats=1, metric_to_eval = 'roc_auc'):
         """
         Initialize the Fit_all_models class.
 
         Args:
             dataset: The preprocessed dataset (Pandas DataFrame).
-            test_size: Fraction of the dataset to be used as the test set.
             random_state: Random seed for reproducibility.
             n_iter: Number of iterations to perform random search.
             cv: Number of cross-validation splits.
@@ -21,7 +20,7 @@ class OptimizerAllModels:
             metric_to_eval: Metric according to which the evaluation will be performed, possible values (roc_auc, f1, accuracy)
         """
         self.dataset = dataset
-        self.test_size = test_size
+        self.test_size = 0.2 # Default test size
         self.random_state = random_state
         self.n_iter = n_iter
         self.cv = cv
@@ -32,10 +31,9 @@ class OptimizerAllModels:
         self.X = dataset.drop(columns=['target'])  # Assumes 'target' column is the label column
         self.y = dataset['target']  # Assumes 'target' column is the label
 
-        # Split the data into training and testing sets
-        self.X_train, self.X_test, self.y_train, self.y_test = train_test_split(
-            self.X, self.y, test_size=test_size, random_state=random_state
-        )
+        self.X_train = self.X
+        self.y_train = self.y
+
 
         # Placeholder for hyperparameters and their metrics for all models
 
@@ -59,7 +57,7 @@ class OptimizerAllModels:
         # Use the DecisionTreeClassifierRandomSearch class
         tuner_decision_tree = DecisionTreeRandomSearch(
             dataset=pd.concat([self.X_train, self.y_train], axis=1),
-            n_iter=self.n_iter,
+            n_iter=self.n_iter[0],
             cv=self.cv,
             random_state=self.random_state,
             n_repeats=self.n_repeats
@@ -68,7 +66,7 @@ class OptimizerAllModels:
         # Use the RandomForestRandomSearch class
         tuner_rand_forest = RandomForestRandomSearch(
             dataset=pd.concat([self.X_train, self.y_train], axis=1),
-            n_iter=self.n_iter,
+            n_iter=self.n_iter[1],
             cv = self.cv,
             random_state=self.random_state,
             n_repeats=self.n_repeats
@@ -78,7 +76,7 @@ class OptimizerAllModels:
         # Use the XGBoostRandomSearch class
         tuner_xgboost = XGBoostRandomSearch(
             dataset=pd.concat([self.X_train, self.y_train], axis=1),
-            n_iter=self.n_iter,
+            n_iter=self.n_iter[2],
             cv = self.cv,
             random_state=self.random_state,
             n_repeats=self.n_repeats

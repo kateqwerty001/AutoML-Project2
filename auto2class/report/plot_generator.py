@@ -6,7 +6,7 @@ import os
 
 
 class PlotGenerator:
-    def generate_histograms(self, data):
+    def generate_histograms(self, data, dataset_name):
         """
         Generate histograms for all columns in the dataframe.
 
@@ -14,6 +14,7 @@ class PlotGenerator:
             data: The dataset to generate histograms for.
 
         """
+        self.dataset_name = dataset_name
         # Select only numeric columns
         numeric_columns = data.select_dtypes(include='number').columns
 
@@ -50,7 +51,7 @@ class PlotGenerator:
         return plt
     
 
-    def generate_bar_charts(self, data):
+    def generate_bar_charts(self, data, dataset_name):
         """
         Generate bar plots for categorical columns in the dataframe.
 
@@ -58,6 +59,7 @@ class PlotGenerator:
             data: The dataset to generate bar plots for.
 
         """
+        self.dataset_name = dataset_name
         categorical_columns = []
         for column in data.columns:
             if (data[column].dtype == 'object' and data[column].nunique() < 20) or \
@@ -100,7 +102,11 @@ class PlotGenerator:
         
         return plt
     
-    def generate_box_plots_metrics(self, metrics):
+    def generate_box_plots_metrics(self, metrics, dataset_name):
+        """
+        Generate box plots for the metrics of different models.
+        """
+        self.dataset_name = dataset_name
         # Create a figure with 3 subplots (1 row, 3 columns)
         fig, axes = plt.subplots(1, 3, figsize=(18, 6))
 

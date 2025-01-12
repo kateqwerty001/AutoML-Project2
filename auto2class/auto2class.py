@@ -3,7 +3,7 @@ from .preprocessing.data_preprocessor import DataPreprocessor
 from .report.report_generator import ReportGenerator
 
 class Auto2Class:
-    def __init__(self, dataframe, target_column_name, test_size=0.2, random_state=42, n_iter=10, cv=5, n_repeats=1, metric = 'roc_auc'):
+    def __init__(self, dataframe, target_column_name, test_size=0.2, random_state=42, n_iter=[3, 3, 3], cv=5, n_repeats=1, metric = 'roc_auc'):
         """
         Initialize the Auto2Class for automated binary classification model selection.
 
@@ -28,6 +28,13 @@ class Auto2Class:
         self.params_rf = None
         self.params_dt = None
         self.params_xgb = None
+
+        if len(self.n_iter) != 3:
+            raise ValueError("n_iter should be a list of length 3.")
+        
+        for i in self.n_iter:
+            if i < 0:
+                raise ValueError("n_iter should be greater than or equal to 0.")
         
 
     def perform_model_selection(self):
@@ -40,7 +47,7 @@ class Auto2Class:
         """
         # Preprocess the data
         preprocessed_data = DataPreprocessor(self.dataframe, self.target_column_name).preprocess()
-        self.optimizer = OptimizerAllModels(preprocessed_data, self.test_size, self.random_state, self.n_iter, self.cv, self.n_repeats, self.metric)
+        self.optimizer = OptimizerAllModels(preprocessed_data, self.random_state, self.n_iter, self.cv, self.n_repeats, self.metric)
         self.optimizer.perform_analysis()
 
         # Store the best hyperparameters for each model after optimization
