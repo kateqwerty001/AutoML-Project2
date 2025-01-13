@@ -318,6 +318,11 @@ class ReportGenerator:
                     fig.add_image(f'ModelOptimization/barplots_max_metric.png', width='460px')
                     fig.add_caption('Barplots of maximum values of metrics achievied by model')
 
+                    # save to folder results of hyperparameters optimization
+                    self.optimizer.params_xgb.to_csv(f'Results/{self.dataset_name}/ModelOptimization/XGBoost_hyperparameters_metrics.csv')
+                    self.optimizer.params_rf.to_csv(f'Results/{self.dataset_name}/ModelOptimization/RandomForest_hyperparameters_metrics.csv')
+                    self.optimizer.params_dt.to_csv(f'Results/{self.dataset_name}/ModelOptimization/DecisionTree_hyperparameters_metrics.csv')
+
         self.new_page()
         with self.doc.create(Section('Interpretabilty of the best models')):
             self.doc.append(NoEscape(r'Auto2class package defined the best model as the one that achievied the highest value of a metric, chosen by the user, or ROC AUC by default.'))
@@ -344,7 +349,7 @@ class ReportGenerator:
                 self.explainer_best_xgb.save_violin_summary_plot_shap(self.optimizer.dataset, self.dataset_name)
                 with self.doc.create(Figure(position='h!')) as fig:
                     fig.add_image(f'XAI/XGBoost/violin_summary_plot_shap.png', width='400px')
-                    fig.add_caption('Violin plot (SHAP) of impact on prediction for the best XGBoost model')
+                    fig.add_caption('Violin plot (SHAP) of impact on prediction for the best default XGBoost model')
 
             # with self.doc.create(Subsection('Random Forest')):
 

@@ -34,29 +34,29 @@
 \hline%
 Index&Column&Non{-}Null Count&Dtype\\%
 \hline%
-0&Date&10000&object\\%
-1&Location&10000&object\\%
-2&MinTemp&9900&float64\\%
-3&MaxTemp&9912&float64\\%
-4&Rainfall&9772&float64\\%
-5&Evaporation&5686&float64\\%
-6&Sunshine&5152&float64\\%
-7&WindGustDir&9298&object\\%
-8&WindGustSpeed&9304&float64\\%
-9&WindDir9am&9276&object\\%
-10&WindDir3pm&9708&object\\%
-11&WindSpeed9am&9875&float64\\%
-12&WindSpeed3pm&9784&float64\\%
-13&Humidity9am&9818&float64\\%
-14&Humidity3pm&9686&float64\\%
-15&Pressure9am&8940&float64\\%
-16&Pressure3pm&8952&float64\\%
-17&Cloud9am&6182&float64\\%
-18&Cloud3pm&5960&float64\\%
-19&Temp9am&9877&float64\\%
-20&Temp3pm&9746&float64\\%
-21&RainToday&9772&object\\%
-22&RainTomorrow&9780&object\\%
+0&Date&3000&object\\%
+1&Location&3000&object\\%
+2&MinTemp&2961&float64\\%
+3&MaxTemp&2970&float64\\%
+4&Rainfall&2922&float64\\%
+5&Evaporation&1667&float64\\%
+6&Sunshine&1506&float64\\%
+7&WindGustDir&2791&object\\%
+8&WindGustSpeed&2793&float64\\%
+9&WindDir9am&2787&object\\%
+10&WindDir3pm&2915&object\\%
+11&WindSpeed9am&2966&float64\\%
+12&WindSpeed3pm&2937&float64\\%
+13&Humidity9am&2939&float64\\%
+14&Humidity3pm&2898&float64\\%
+15&Pressure9am&2681&float64\\%
+16&Pressure3pm&2684&float64\\%
+17&Cloud9am&1832&float64\\%
+18&Cloud3pm&1771&float64\\%
+19&Temp9am&2958&float64\\%
+20&Temp3pm&2918&float64\\%
+21&RainToday&2922&object\\%
+22&RainTomorrow&2926&object\\%
 \hline%
 \end{tabular}%
 \end{table}
@@ -74,22 +74,22 @@ Index&Column&Non{-}Null Count&Dtype\\%
 \hline%
 Index&Column Name/Statistic&count&mean&std&min&25\%&50\%&75\%&max\\%
 \hline%
-0&MinTemp&9900.0&12.26&6.44&{-}8.2&7.7&12.0&17.0&29.5\\%
-1&MaxTemp&9912.0&23.26&7.17&{-}1.9&17.9&22.7&28.4&46.4\\%
-2&Rainfall&9772.0&2.35&8.41&0.0&0.0&0.0&0.8&225.0\\%
-3&Evaporation&5686.0&5.4&3.92&0.0&2.6&4.8&7.2&82.4\\%
-4&Sunshine&5152.0&7.65&3.78&0.0&5.0&8.5&10.7&14.5\\%
-5&WindGustSpeed&9304.0&39.95&13.45&9.0&31.0&39.0&48.0&117.0\\%
-6&WindSpeed9am&9875.0&14.01&8.85&0.0&7.0&13.0&19.0&72.0\\%
-7&WindSpeed3pm&9784.0&18.6&8.8&0.0&13.0&17.0&24.0&87.0\\%
-8&Humidity9am&9818.0&68.89&18.88&4.0&57.0&70.0&83.0&100.0\\%
-9&Humidity3pm&9686.0&51.79&20.9&2.0&37.0&52.0&66.0&100.0\\%
-10&Pressure9am&8940.0&1017.68&7.08&982.2&1013.0&1017.6&1022.4&1040.4\\%
-11&Pressure3pm&8952.0&1015.29&7.03&980.2&1010.5&1015.3&1020.0&1038.9\\%
-12&Cloud9am&6182.0&4.44&2.88&0.0&1.0&5.0&7.0&8.0\\%
-13&Cloud3pm&5960.0&4.49&2.72&0.0&2.0&5.0&7.0&8.0\\%
-14&Temp9am&9877.0&17.03&6.51&{-}5.3&12.3&16.8&21.7&36.8\\%
-15&Temp3pm&9746.0&21.72&6.98&{-}2.9&16.6&21.2&26.5&44.5\\%
+0&MinTemp&2961.0&11.96&6.33&{-}5.0&7.5&11.8&16.8&29.4\\%
+1&MaxTemp&2970.0&22.97&7.17&{-}1.9&17.6&22.3&28.1&46.1\\%
+2&Rainfall&2922.0&2.15&7.79&0.0&0.0&0.0&0.8&225.0\\%
+3&Evaporation&1667.0&5.35&3.75&0.0&2.6&4.6&7.4&31.0\\%
+4&Sunshine&1506.0&7.46&3.87&0.0&4.6&8.2&10.7&14.5\\%
+5&WindGustSpeed&2793.0&39.81&13.33&9.0&31.0&39.0&46.0&106.0\\%
+6&WindSpeed9am&2966.0&14.02&8.93&0.0&7.0&13.0&19.0&65.0\\%
+7&WindSpeed3pm&2937.0&18.66&8.87&0.0&13.0&19.0&24.0&65.0\\%
+8&Humidity9am&2939.0&69.13&18.85&4.0&57.0&70.0&83.0&100.0\\%
+9&Humidity3pm&2898.0&51.86&20.79&4.0&37.0&52.0&66.0&100.0\\%
+10&Pressure9am&2681.0&1017.89&7.12&982.2&1013.2&1017.8&1022.6&1040.3\\%
+11&Pressure3pm&2684.0&1015.52&7.08&984.2&1010.6&1015.5&1020.3&1037.6\\%
+12&Cloud9am&1832.0&4.49&2.88&0.0&1.0&5.0&7.0&8.0\\%
+13&Cloud3pm&1771.0&4.58&2.72&0.0&2.0&5.0&7.0&8.0\\%
+14&Temp9am&2958.0&16.74&6.44&{-}4.1&12.0&16.25&21.4&35.2\\%
+15&Temp3pm&2918.0&21.43&6.99&{-}1.0&16.23&20.7&26.3&44.5\\%
 \hline%
 \end{tabular}%
 \end{table}
@@ -200,9 +200,9 @@ Index&Column Name/Statistic&count&mean&std&min&25\%&50\%&75\%&max\\%
 \hline%
 Index&Metric/Hyperp.\textbackslash{} Iteration&0&1&2&3&4&5&6&7\\%
 \hline%
-0&f1&0.9386&0.7892&0.9316&0.7389&0.7581&0.9506&0.735&0.8504\\%
-1&accuracy&0.9387&0.7892&0.9317&0.739&0.7581&0.9506&0.735&0.8504\\%
-2&roc\_auc&0.988&0.8731&0.9867&0.8102&0.8435&0.9897&0.8108&0.9282\\%
+0&f1&0.9437&0.8196&0.9346&0.7529&0.7783&0.9523&0.7294&0.8909\\%
+1&accuracy&0.9437&0.8196&0.9347&0.753&0.7784&0.9523&0.7294&0.8909\\%
+2&roc\_auc&0.9912&0.9113&0.9869&0.827&0.8679&0.9901&0.8203&0.9613\\%
 3&n\_estimators&100&50&50&50&200&100&200&200\\%
 4&criterion&gini&gini&log\_loss&log\_loss&gini&entropy&gini&log\_loss\\%
 5&max\_depth&None&20&30&10&10&None&30&10\\%
@@ -226,9 +226,9 @@ Index&Metric/Hyperp.\textbackslash{} Iteration&0&1&2&3&4&5&6&7\\%
 \hline%
 Index&Metric/Hyperp. \textbackslash{} Iteration&0&1&2&3&4&5&6&7\\%
 \hline%
-0&f1&0.8973&0.7176&0.8504&0.7304&0.5374&0.8137&0.8654&0.4482\\%
-1&accuracy&0.8979&0.7226&0.8508&0.7306&0.5835&0.8138&0.8658&0.4978\\%
-2&roc\_auc&0.8979&0.7166&0.8991&0.7826&0.6173&0.8845&0.8951&0.4994\\%
+0&f1&0.8979&0.7256&0.8412&0.7299&0.6491&0.8436&0.8692&0.453\\%
+1&accuracy&0.8985&0.7302&0.8413&0.73&0.6607&0.8437&0.8695&0.5022\\%
+2&roc\_auc&0.8985&0.7303&0.898&0.805&0.6552&0.9067&0.8973&0.4995\\%
 3&criterion&gini&log\_loss&log\_loss&gini&gini&entropy&entropy&entropy\\%
 4&splitter&best&best&best&best&random&best&random&best\\%
 5&max\_depth&None&None&40&10&40&10&40&40\\%
@@ -248,23 +248,23 @@ Index&Metric/Hyperp. \textbackslash{} Iteration&0&1&2&3&4&5&6&7\\%
 \caption{XGBoost Hyperparameters and achivied metrics}%
 \vspace{0.2cm}%
 \centering%
-\begin{tabular}{|c||c||c||c|}%
+\begin{tabular}{|c||c||c||c||c|}%
 \hline%
-Index&Metric/Hyperp. \textbackslash{} Iteration&0&1\\%
+Index&Metric/Hyperp. \textbackslash{} Iteration&0&1&2\\%
 \hline%
-0&f1&0.9187&0.8807\\%
-1&accuracy&0.9188&0.8807\\%
-2&roc\_auc&0.9674&0.9489\\%
-3&eval\_metric&logloss&logloss\\%
-4&n\_estimators&100&50\\%
-5&max\_depth&6&10\\%
-6&learning\_rate&0.3&0.05\\%
-7&subsample&1.0&0.7\\%
-8&colsample\_bytree&1.0&0.7\\%
-9&min\_child\_weight&1&1\\%
-10&gamma&0&0\\%
-11&reg\_alpha&0&1\\%
-12&reg\_lambda&1&1\\%
+0&f1&0.9436&0.9028&0.8203\\%
+1&accuracy&0.9437&0.9029&0.8203\\%
+2&roc\_auc&0.9828&0.9643&0.9085\\%
+3&eval\_metric&logloss&logloss&logloss\\%
+4&n\_estimators&100&50&50\\%
+5&max\_depth&6&10&6\\%
+6&learning\_rate&0.3&0.05&0.05\\%
+7&subsample&1.0&0.7&0.5\\%
+8&colsample\_bytree&1.0&0.7&0.7\\%
+9&min\_child\_weight&1&1&7\\%
+10&gamma&0.0&0.0&0.1\\%
+11&reg\_alpha&0&1&1\\%
+12&reg\_lambda&1&1&2\\%
 \hline%
 \end{tabular}%
 \end{table}
@@ -298,7 +298,7 @@ Index&Metric/Hyperp. \textbackslash{} Iteration&0&1\\%
 \label{sec:Interpretabiltyofthebestmodels}%
 Auto2class package defined the best model as the one that achievied the highest value of a metric, chosen by the user, or ROC AUC by default.%
 In this case, the optimization process was aimed at maximizing%
-\textbf{ ROC AUC.}%
+\textbf{ F1 Score.}%
 \\%
 Do not forget, that after preprocessing, columns names have changed, because of transformations of categorical features.%
 \subsection{The best XGBoost model Explanation}%
@@ -326,7 +326,7 @@ Do not forget, that after preprocessing, columns names have changed, because of 
 \begin{figure}[h!]%
 \centering%
 \includegraphics[width=400px]{XAI/XGBoost/violin_summary_plot_shap.png}%
-\caption{Violin plot (SHAP) of impact on prediction for the best XGBoost model}%
+\caption{Violin plot (SHAP) of impact on prediction for the best default XGBoost model}%
 \end{figure}
 
 %

@@ -8,19 +8,18 @@ class ExplainDecisionTree:
     def __init__(self, model):
         self.model = model
 
-    def plot_tree(self, X_train, y_train):
+    def build_tree(self, X_train, y_train):
         '''
         Plots the decision tree using the model's plot_tree method.
 
         Parameters:
         - X_train: Training data
         - y_train: Target labels
-        '''
-        # Visualize the decision tree
-        viz_model = dtreeviz.model(self.model, X_train, y_train, target_name='target', feature_names=X_train.columns)
-        
-        # Open visualization in a pop-up window
-        v = viz_model.view()     # render as SVG into internal object 
-        v.show()
 
-        return
+        Returns:
+        - viz_model: Decision tree model
+        '''
+        # Model of the decision tree
+        viz_model = dtreeviz.model(self.model, X_train, y_train, target_name='target', feature_names=X_train.columns)
+
+        return viz_model

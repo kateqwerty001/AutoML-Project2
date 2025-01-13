@@ -6,7 +6,7 @@ from sklearn.metrics import roc_auc_score, accuracy_score, f1_score
 import pandas as pd
 
 class OptimizerAllModels:
-    def __init__(self, dataset, random_state=42, n_iter=[3, 3, 3], cv=5, n_repeats=1, metric_to_eval = 'roc_auc'):
+    def __init__(self, dataset, random_state=42, n_iter=[0, 0, 0], cv=5, n_repeats=1, metric_to_eval = 'roc_auc'):
         """
         Initialize the Fit_all_models class.
 

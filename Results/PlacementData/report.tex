@@ -179,21 +179,21 @@ Index&Column Name/Statistic&count&mean&std&min&25\%&50\%&75\%&max\\%
 \caption{Random Forest Hyperparameters and achivied metrics}%
 \vspace{0.2cm}%
 \centering%
-\begin{tabular}{|c||c||c||c||c||c||c||c||c||c|}%
+\begin{tabular}{|c||c||c||c||c||c||c||c|}%
 \hline%
-Index&Metric/Hyperp.\textbackslash{} Iteration&0&1&2&3&4&5&6&7\\%
+Index&Metric/Hyperp.\textbackslash{} Iteration&0&1&2&3&4&5\\%
 \hline%
-0&f1&0.9833&0.9764&0.9831&0.9763&0.9594&0.9764&0.8039&0.9764\\%
-1&accuracy&0.9833&0.9764&0.9831&0.9764&0.9595&0.9764&0.8041&0.9764\\%
-2&roc\_auc&0.9989&0.9977&0.9976&0.9894&0.9964&0.999&0.9025&0.9986\\%
-3&n\_estimators&100&50&50&50&200&100&200&200\\%
-4&criterion&gini&gini&log\_loss&log\_loss&gini&entropy&gini&log\_loss\\%
-5&max\_depth&None&20&30&10&10&None&30&10\\%
-6&min\_samples\_split&2&2&2&10&10&2&10&10\\%
-7&min\_samples\_leaf&1&1&1&4&2&2&1&1\\%
-8&min\_weight\_fraction\_leaf&0.0&0.01&0.0&0.1&0.05&0.0&0.1&0.0\\%
-9&max\_features&sqrt&log2&None&None&sqrt&sqrt&None&log2\\%
-10&bootstrap&1&1&1&0&1&0&0&1\\%
+0&f1&1.0&0.973&0.9797&0.9561&0.9527&0.9763\\%
+1&accuracy&1.0&0.973&0.9797&0.9561&0.9527&0.9764\\%
+2&roc\_auc&1.0&0.9961&0.9986&0.9803&0.9932&0.9986\\%
+3&n\_estimators&100&50&50&50&200&100\\%
+4&criterion&gini&gini&log\_loss&log\_loss&gini&entropy\\%
+5&max\_depth&None&20&30&10&10&None\\%
+6&min\_samples\_split&2&2&2&10&10&2\\%
+7&min\_samples\_leaf&1&1&1&4&2&2\\%
+8&min\_weight\_fraction\_leaf&0.0&0.01&0.0&0.1&0.05&0.0\\%
+9&max\_features&sqrt&log2&None&None&sqrt&sqrt\\%
+10&bootstrap&1&1&1&0&1&0\\%
 \hline%
 \end{tabular}%
 \end{table}
@@ -205,21 +205,21 @@ Index&Metric/Hyperp.\textbackslash{} Iteration&0&1&2&3&4&5&6&7\\%
 \caption{Decision Tree Hyperparameters and achivied metrics}%
 \vspace{0.2cm}%
 \centering%
-\begin{tabular}{|c||c||c||c||c||c||c||c||c||c|}%
+\begin{tabular}{|c||c||c||c||c||c||c||c|}%
 \hline%
-Index&Metric/Hyperp. \textbackslash{} Iteration&0&1&2&3&4&5&6&7\\%
+Index&Metric/Hyperp. \textbackslash{} Iteration&0&1&2&3&4&5\\%
 \hline%
-0&f1&0.9333&0.9763&0.8648&0.9459&0.756&0.9966&0.9121&0.7402\\%
-1&accuracy&0.9333&0.9764&0.8649&0.9459&0.7568&0.9966&0.9122&0.7432\\%
-2&roc\_auc&0.9333&0.9658&0.9189&0.9652&0.829&0.9966&0.9252&0.7854\\%
-3&criterion&gini&log\_loss&log\_loss&gini&gini&entropy&entropy&entropy\\%
-4&splitter&best&best&best&best&random&best&random&best\\%
-5&max\_depth&None&None&40&10&40&10&40&40\\%
-6&min\_samples\_split&2&10&2&10&5&5&5&5\\%
-7&min\_samples\_leaf&1&2&4&4&1&1&1&4\\%
-8&max\_features&None&None&sqrt&None&None&None&log2&log2\\%
-9&class\_weight&None&None&None&None&balanced&balanced&balanced&balanced\\%
-10&min\_impurity\_decrease&0.0&0.1&0.0&0.01&0.05&0.0&0.0&0.1\\%
+0&f1&0.9833&0.9493&0.8546&0.973&0.7392&0.9831\\%
+1&accuracy&0.9833&0.9493&0.8547&0.973&0.7399&0.9831\\%
+2&roc\_auc&0.9833&0.9681&0.9144&0.9818&0.8162&0.9831\\%
+3&criterion&gini&log\_loss&log\_loss&gini&gini&entropy\\%
+4&splitter&best&best&best&best&random&best\\%
+5&max\_depth&None&None&40&10&40&10\\%
+6&min\_samples\_split&2&10&2&10&5&5\\%
+7&min\_samples\_leaf&1&2&4&4&1&1\\%
+8&max\_features&None&None&sqrt&None&None&None\\%
+9&class\_weight&None&None&None&None&balanced&balanced\\%
+10&min\_impurity\_decrease&0.0&0.1&0.0&0.01&0.05&0.0\\%
 \hline%
 \end{tabular}%
 \end{table}
@@ -231,23 +231,23 @@ Index&Metric/Hyperp. \textbackslash{} Iteration&0&1&2&3&4&5&6&7\\%
 \caption{XGBoost Hyperparameters and achivied metrics}%
 \vspace{0.2cm}%
 \centering%
-\begin{tabular}{|c||c||c||c||c||c||c||c||c||c|}%
+\begin{tabular}{|c||c||c||c|}%
 \hline%
-Index&Metric/Hyperp. \textbackslash{} Iteration&0&1&2&3&4&5&6&7\\%
+Index&Metric/Hyperp. \textbackslash{} Iteration&0&1\\%
 \hline%
-0&f1&1.0&0.9797&0.8446&0.9865&0.9797&0.973&0.973&0.973\\%
-1&accuracy&1.0&0.9797&0.8446&0.9865&0.9797&0.973&0.973&0.973\\%
-2&roc\_auc&1.0&0.9983&0.9448&0.9995&0.998&0.9958&0.996&0.9993\\%
-3&eval\_metric&logloss&logloss&logloss&logloss&logloss&logloss&logloss&logloss\\%
-4&n\_estimators&100&50&50&100&50&200&200&100\\%
-5&max\_depth&6&10&6&15&10&6&15&6\\%
-6&learning\_rate&0.3&0.05&0.05&0.1&0.1&0.01&0.1&0.2\\%
-7&subsample&1.0&0.7&0.5&0.9&0.9&0.5&0.7&1.0\\%
-8&colsample\_bytree&1.0&0.7&0.7&0.7&0.5&0.7&0.9&0.9\\%
-9&min\_child\_weight&1&1&7&3&7&5&5&3\\%
-10&gamma&0.0&0.0&0.1&0.2&0.0&0.0&0.1&0.2\\%
-11&reg\_alpha&0.0&1.0&1.0&0.0&1.0&0.01&0.1&0.0\\%
-12&reg\_lambda&1.0&1.0&2.0&1.0&1.0&1.0&1.0&1.5\\%
+0&f1&1.0&0.9797\\%
+1&accuracy&1.0&0.9797\\%
+2&roc\_auc&1.0&0.9969\\%
+3&eval\_metric&logloss&logloss\\%
+4&n\_estimators&100&50\\%
+5&max\_depth&6&10\\%
+6&learning\_rate&0.3&0.05\\%
+7&subsample&1.0&0.7\\%
+8&colsample\_bytree&1.0&0.7\\%
+9&min\_child\_weight&1&1\\%
+10&gamma&0&0\\%
+11&reg\_alpha&0&1\\%
+12&reg\_lambda&1&1\\%
 \hline%
 \end{tabular}%
 \end{table}
@@ -281,7 +281,7 @@ Index&Metric/Hyperp. \textbackslash{} Iteration&0&1&2&3&4&5&6&7\\%
 \label{sec:Interpretabiltyofthebestmodels}%
 Auto2class package defined the best model as the one that achievied the highest value of a metric, chosen by the user, or ROC AUC by default.%
 In this case, the optimization process was aimed at maximizing%
-\textbf{ ROC AUC.}%
+\textbf{ F1 Score.}%
 \\%
 Do not forget, that after preprocessing, columns names have changed, because of transformations of categorical features.%
 \subsection{The best XGBoost model Explanation}%
@@ -309,7 +309,7 @@ Do not forget, that after preprocessing, columns names have changed, because of 
 \begin{figure}[h!]%
 \centering%
 \includegraphics[width=400px]{XAI/XGBoost/violin_summary_plot_shap.png}%
-\caption{Violin plot (SHAP) of impact on prediction for the best XGBoost model}%
+\caption{Violin plot (SHAP) of impact on prediction for the best default XGBoost model}%
 \end{figure}
 
 %

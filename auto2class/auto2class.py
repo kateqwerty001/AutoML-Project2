@@ -1,6 +1,7 @@
 from .optimization.optimizer_all_models import OptimizerAllModels
 from .preprocessing.data_preprocessor import DataPreprocessor
 from .report.report_generator import ReportGenerator
+from .xai.explain_decision_tree import ExplainDecisionTree
 
 class Auto2Class:
     def __init__(self, dataframe, target_column_name, test_size=0.2, random_state=42, n_iter=[3, 3, 3], cv=5, n_repeats=1, metric = 'roc_auc'):
@@ -71,3 +72,8 @@ class Auto2Class:
 
         print("Report generated successfully.")
         return
+    
+    def build_best_decision_tree(self):
+        explainer_dt = ExplainDecisionTree(self.optimizer.best_dt_instance)
+        tree = explainer_dt.build_tree(self.optimizer.X_train, self.optimizer.y_train)
+        return tree
