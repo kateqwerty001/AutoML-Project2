@@ -6,6 +6,9 @@ import io, os
 from pylatex import Section, Subsection, Figure, NoEscape, Subsubsection
 from .plot_generator import PlotGenerator
 import joblib
+from ..xai.explain_decision_tree import ExplainDecisionTree
+from ..xai.explain_random_forest import ExplainRandomForest
+from ..xai.explain_xgboost import ExplainXGBoost
 
 class ReportGenerator:
     def __init__(self, dataset, dataset_name, optimizer):
@@ -34,6 +37,10 @@ class ReportGenerator:
         joblib.dump(self.optimizer.best_xgb_instance, f'Results/{self.dataset_name}/Models/best_XGBoost.joblib')
         joblib.dump(self.optimizer.best_rf_instance, f'Results/{self.dataset_name}/Models/best_RandomForest.joblib')
         joblib.dump(self.optimizer.best_dt_instance, f'Results/{self.dataset_name}/Models/best_DecisionTree.joblib')
+
+        self.explainer_best_xgb = ExplainXGBoost(self.optimizer.best_xgb_instance)
+        self.explainer_best_rf = ExplainRandomForest(self.optimizer.best_rf_instance)
+        self.explainer_best_dt = ExplainDecisionTree(self.optimizer.best_dt_instance)
 
 
     def make_small_margins(self):
@@ -310,6 +317,40 @@ class ReportGenerator:
                 with self.doc.create(Figure(position='h!')) as fig:
                     fig.add_image(f'ModelOptimization/barplots_max_metric.png', width='460px')
                     fig.add_caption('Barplots of maximum values of metrics achievied by model')
+
+        self.new_page()
+        with self.doc.create(Section('Interpretabilty of the best models')):
+            self.doc.append(NoEscape(r'Auto2class package defined the best model as the one that achievied the highest value of a metric, chosen by the user, or ROC AUC by default.'))
+            self.doc.append(NoEscape(r'In this case, the optimization process was aimed at maximizing'))
+            if self.optimizer.metric_to_eval == 'roc_auc':
+                self.doc.append(NoEscape(r'\textbf{ ROC AUC.}'))
+            elif self.optimizer.metric_to_eval == 'accuracy':
+                self.doc.append(NoEscape(r'\textbf{ Accuracy.}'))
+            elif self.optimizer.metric_to_eval == 'f1':
+                self.doc.append(NoEscape(r'\textbf{ F1 Score.}'))
+            self.doc.append(NoEscape(r'\\'))
+            self.doc.append(NoEscape(r'Do not forget, that after preprocessing, columns names have changed, because of transformations of categorical features.'))
+            with self.doc.create(Subsection('The best XGBoost model Explanation')):
+                self.explainer_best_xgb.save_global_feature_importance_shap(self.optimizer.dataset, self.dataset_name)
+                with self.doc.create(Figure(position='h!')) as fig:
+                    fig.add_image(f'XAI/XGBoost/global_feature_importance_shap.png', width='350px')
+                    fig.add_caption('SHAP values for the best XGBoost model')
+
+                self.explainer_best_xgb.save_feature_importance_plot(self.dataset_name)
+                with self.doc.create(Figure(position='h!')) as fig:
+                    fig.add_image(f'XAI/XGBoost/feature_importance.png', width='350px')
+                    fig.add_caption('Feature Importance for the best XGBoost model')
+
+                self.explainer_best_xgb.save_violin_summary_plot_shap(self.optimizer.dataset, self.dataset_name)
+                with self.doc.create(Figure(position='h!')) as fig:
+                    fig.add_image(f'XAI/XGBoost/violin_summary_plot_shap.png', width='400px')
+                    fig.add_caption('Violin plot (SHAP) of impact on prediction for the best XGBoost model')
+
+            # with self.doc.create(Subsection('Random Forest')):
+
+
+            # with self.doc.create(Subsection('Decision Tree')):
+
 
         self.doc.generate_pdf(f'Results/{self.dataset_name}/report', clean_tex=False)
 

@@ -1,6 +1,11 @@
 import shap
 import matplotlib.pyplot as plt
 import pandas as pd
+import shap
+import matplotlib.pyplot as plt
+from matplotlib import cm
+import os
+
 
 class ExplainXGBoost:
     '''
@@ -9,12 +14,13 @@ class ExplainXGBoost:
     def __init__(self, model):
         self.model = model
 
-    def show_global_feature_importance_shap(self, data):
+    def save_global_feature_importance_shap(self, data, dataset_name):
         '''
         This method returns the global feature importance using SHAP library and plots the bar graph.
         It takes the data on which the importance is calculated.
         '''
-        # if the data is too large, then take random 1000 samples, because SHAP explainer is computationally expensive.
+        self.dataset_name = dataset_name    
+        # If the data is too large, then take random 1000 samples, because SHAP explainer is computationally expensive.
         if len(data) > 1000:
             data_sample = data.sample(1000)
         else:
@@ -24,10 +30,13 @@ class ExplainXGBoost:
 
         shap_values = explainer(data_sample)
         
-        print("Global Feature Importance using SHAP")
-        shap.plots.bar(shap_values, max_display=10)
+        # Create SHAP bar plot
+        shap_plot = shap.plots.bar(shap_values, max_display=15, show=False)
 
-        plt.show()
+        # Save the plot
+        os.makedirs(f'Results/{self.dataset_name}/XAI/XGBoost', exist_ok=True)
+        plt.savefig(f'Results/{self.dataset_name}/XAI/XGBoost/global_feature_importance_shap.png', dpi=300, bbox_inches='tight')
+        plt.close()
 
         return 
     
@@ -69,12 +78,14 @@ class ExplainXGBoost:
 
         return
         
-    def show_violin_summary_plot_shap(self, data):
+    def save_violin_summary_plot_shap(self, data, dataset_name):
         '''
         This method returns the summary plot using SHAP library and plots the violin plot.
         It takes the data on which the violin plot is plotted.
         '''
-        # if the data is too large, then take random 1000 samples, because SHAP explainer is computationally expensive.
+        self.dataset_name = dataset_name
+
+        # If the data is too large, then take random 1000 samples, because SHAP explainer is computationally expensive.
         if len(data) > 1000:
             data_sample = data.sample(1000)
         else:
@@ -84,19 +95,24 @@ class ExplainXGBoost:
 
         shap_values = explainer(data_sample)
 
-        shap.plots.violin(shap_values, max_display=10)
+        # Create SHAP violin plot
+        shap_plot = shap.plots.violin(shap_values, max_display=15, show=False)
 
-        plt.show()
+        # Save the plot
+        os.makedirs(f'Results/{self.dataset_name}/XAI/XGBoost', exist_ok=True)
+        plt.savefig(f'Results/{self.dataset_name}/XAI/XGBoost/violin_summary_plot_shap.png', dpi=300, bbox_inches='tight')
+        plt.close()
 
         return
         
-    def plot_feature_importance(self, max_features=10):
+    def save_feature_importance_plot(self, dataset_name, max_features=15):
         '''
         Plots the feature importance using the model's `feature_importances_` attribute.
 
         Parameters:
-        - max_features: Maximum number of top features to display (default: 10).
+        - max_features: Maximum number of top features to display (default: 15).
         '''
+        self.dataset_name = dataset_name
         # get feature importances from the model
         importances = self.model.feature_importances_
 
@@ -113,12 +129,15 @@ class ExplainXGBoost:
 
         # plot the feature importances
         plt.figure(figsize=(8, 4))
-        plt.barh(feature_importance_df['Feature'], feature_importance_df['Importance'], color='#C70039')
+        plt.barh(feature_importance_df['Feature'], feature_importance_df['Importance'], color='#7D50DD')
         plt.xlabel('Importance')
         plt.ylabel('Feature')
         plt.title('Feature Importance')
         plt.gca().invert_yaxis()
-        plt.show()
+
+        # save the plot
+        plt.savefig(f'Results/{self.dataset_name}/XAI/XGBoost/feature_importance.png', dpi=300, bbox_inches='tight')
+        plt.close()
 
         return
 
