@@ -9,7 +9,7 @@
 \usepackage{graphicx}%
 %
 \title{Report on PlacementData dataset}%
-\author{Auto2Class}%
+\author{Classify2TeX}%
 \usepackage{amsmath}%
 \usepackage{amssymb}%
 \usepackage{enumitem}%
@@ -24,6 +24,7 @@
 \label{sec:ExploratoryDataAnalysis}%
 \subsection{Non{-}Null Count, Dtype of features}%
 \label{subsec:Non{-}NullCount,Dtypeoffeatures}%
+The table 1 provides information about the dataset, including the number of non-null values and the data types of each feature.%
 
 
 \begin{table}[h!]%
@@ -56,6 +57,7 @@ Index&Column&Non{-}Null Count&Dtype\\%
 %
 \subsection{Descriptive Statistics}%
 \label{subsec:DescriptiveStatistics}%
+The table 2 provides descriptive statistics for the dataset, including the count, mean, standard deviation, minimum, and maximum values.%
 
 
 \begin{table}[h!]%
@@ -81,8 +83,10 @@ Index&Column Name/Statistic&count&mean&std&min&25\%&50\%&75\%&max\\%
 \newpage%
 \subsection{Distribution of features}%
 \label{subsec:Distributionoffeatures}%
+This section provides a visual representation of the distribution of features in the dataset using histograms (numerical features) and bar charts (categorical features). These visualizations can help in understanding the data.%
 \subsubsection{Histograms of Numerical columns}%
 \label{ssubsec:HistogramsofNumericalcolumns}%
+The histograms below show the distribution of numerical features in the dataset.%
 
 
 \begin{figure}[h!]%
@@ -95,6 +99,7 @@ Index&Column Name/Statistic&count&mean&std&min&25\%&50\%&75\%&max\\%
 \newpage%
 \subsubsection{Bar Charts of Categorical columns}%
 \label{ssubsec:BarChartsofCategoricalcolumns}%
+The bar charts below show the distribution of categorical features in the dataset.%
 
 
 \begin{figure}[h!]%
@@ -183,9 +188,9 @@ Index&Column Name/Statistic&count&mean&std&min&25\%&50\%&75\%&max\\%
 \hline%
 Index&Metric/Hyperp.\textbackslash{} Iteration&0&1&2&3&4&5\\%
 \hline%
-0&f1&1.0&0.973&0.9797&0.9561&0.9527&0.9763\\%
-1&accuracy&1.0&0.973&0.9797&0.9561&0.9527&0.9764\\%
-2&roc\_auc&1.0&0.9961&0.9986&0.9803&0.9932&0.9986\\%
+0&f1&0.9833&0.973&0.9763&0.8577&0.9527&0.9865\\%
+1&accuracy&0.9833&0.973&0.9764&0.8581&0.9527&0.9865\\%
+2&roc\_auc&0.9989&0.9987&0.9988&0.9319&0.9926&0.9992\\%
 3&n\_estimators&100&50&50&50&200&100\\%
 4&criterion&gini&gini&log\_loss&log\_loss&gini&entropy\\%
 5&max\_depth&None&20&30&10&10&None\\%
@@ -209,9 +214,9 @@ Index&Metric/Hyperp.\textbackslash{} Iteration&0&1&2&3&4&5\\%
 \hline%
 Index&Metric/Hyperp. \textbackslash{} Iteration&0&1&2&3&4&5\\%
 \hline%
-0&f1&0.9833&0.9493&0.8546&0.973&0.7392&0.9831\\%
-1&accuracy&0.9833&0.9493&0.8547&0.973&0.7399&0.9831\\%
-2&roc\_auc&0.9833&0.9681&0.9144&0.9818&0.8162&0.9831\\%
+0&f1&0.9166&0.9153&0.8648&0.9493&0.7507&0.9831\\%
+1&accuracy&0.9167&0.9155&0.8649&0.9493&0.7568&0.9831\\%
+2&roc\_auc&0.9167&0.9382&0.8885&0.9742&0.8256&0.9831\\%
 3&criterion&gini&log\_loss&log\_loss&gini&gini&entropy\\%
 4&splitter&best&best&best&best&random&best\\%
 5&max\_depth&None&None&40&10&40&10\\%
@@ -235,8 +240,8 @@ Index&Metric/Hyperp. \textbackslash{} Iteration&0&1&2&3&4&5\\%
 \hline%
 Index&Metric/Hyperp. \textbackslash{} Iteration&0&1\\%
 \hline%
-0&f1&1.0&0.9797\\%
-1&accuracy&1.0&0.9797\\%
+0&f1&1.0&0.973\\%
+1&accuracy&1.0&0.973\\%
 2&roc\_auc&1.0&0.9969\\%
 3&eval\_metric&logloss&logloss\\%
 4&n\_estimators&100&50\\%
