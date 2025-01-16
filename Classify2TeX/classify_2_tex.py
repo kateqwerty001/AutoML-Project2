@@ -63,9 +63,6 @@ class Classify2TeX:
         """
         if self.optimizer is None:
             raise ValueError("Model selection has not been performed. Please run perform_model_selection() first.")
-        
-        # rename column 'target' to target_column_name
-        self.dataframe.rename(columns={'target': self.target_column_name}, inplace=True)
 
         self.report_generator = ReportGenerator(self.dataframe, dataset_name, self.optimizer)
         self.report_generator.generate_report()

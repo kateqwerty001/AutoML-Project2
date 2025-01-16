@@ -20,8 +20,8 @@ class XGBoostRandomSearch:
             n_repeats: Number of times to repeat cross-validation for stability (int).
         """
         # Extract features (X) and target (y) from the dataset
-        self.X = dataset.drop(columns=['target'])  # Assumes 'target' is the target variable
         self.y = dataset['target']  # Target variable
+        self.X = dataset.drop(columns=['target']) 
         self.history = None  # Store results history
         self.random_state = random_state  # Random seed for reproducibility
 

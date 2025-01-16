@@ -48,7 +48,7 @@ class ReportGenerator:
         This method reduces the margins of the document to make it more compact
         '''
         self.doc.packages.append(Command('usepackage', 'geometry'))
-        self.doc.packages.append(Command('geometry', 'margin=0.5in'))
+        self.doc.packages.append(Command('geometry', 'margin=0.2in'))
 
 
     def new_page(self):
@@ -288,6 +288,8 @@ class ReportGenerator:
                 self.doc.append(NoEscape(r'The table 1 provides information about the dataset, including the number of non-null values and the data types of each feature.'))
                 self.add_info_table()  # Add dataset info() table
 
+            self.new_page()
+
             with self.doc.create(Subsection('Descriptive Statistics')):
                 self.doc.append(NoEscape(r'The table 2 provides descriptive statistics for the dataset, including the count, mean, standard deviation, minimum, and maximum values.'))
                 self.add_describe_info()  # Add dataset describe() table
@@ -341,7 +343,7 @@ class ReportGenerator:
             self.doc.append(NoEscape(r'\\'))
             self.doc.append(NoEscape(r'Do not forget, that after preprocessing, columns names have changed, because of transformations of categorical features.'))
             with self.doc.create(Subsection('The best XGBoost model Explanation')):
-                self.explainer_best_xgb.save_global_feature_importance_shap(self.optimizer.dataset, self.dataset_name)
+                self.explainer_best_xgb.save_global_feature_importance_shap(self.optimizer.X, self.dataset_name)
                 with self.doc.create(Figure(position='h!')) as fig:
                     fig.add_image(f'XAI/XGBoost/global_feature_importance_shap.png', width='350px')
                     fig.add_caption('SHAP values for the best XGBoost model')
@@ -351,7 +353,7 @@ class ReportGenerator:
                     fig.add_image(f'XAI/XGBoost/feature_importance.png', width='350px')
                     fig.add_caption('Feature Importance for the best XGBoost model')
 
-                self.explainer_best_xgb.save_violin_summary_plot_shap(self.optimizer.dataset, self.dataset_name)
+                self.explainer_best_xgb.save_violin_summary_plot_shap(self.optimizer.X, self.dataset_name)
                 with self.doc.create(Figure(position='h!')) as fig:
                     fig.add_image(f'XAI/XGBoost/violin_summary_plot_shap.png', width='400px')
                     fig.add_caption('Violin plot (SHAP) of impact on prediction for the best default XGBoost model')

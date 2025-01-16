@@ -78,6 +78,10 @@ class RandomSearchWithMetrics:
                 accuracies.append(accuracy_score(self.y, y_pred))  # Accuracy score
                 roc_aucs.append(roc_auc_score(self.y, y_probabilities))  # ROC AUC score
 
+                # Train the model on the entire dataset
+                self.pipeline.fit(self.X, self.y)
+                self.classifiers.append(self.pipeline.named_steps['clf'])  # Append the classifier to the list
+
             # Calculate average metrics across all repeats
             avg_metrics = {
                 'f1': np.mean(f1_scores),  # Average F1 score
@@ -88,7 +92,6 @@ class RandomSearchWithMetrics:
             # Print the current results for the user (useful for monitoring)
             print("Checked another model, results using cross-validation:", avg_metrics)
 
-            self.classifiers.append(self.pipeline.named_steps['clf'])
             # Add the hyperparameter values to the metrics dictionary
             avg_metrics.update(params)
 

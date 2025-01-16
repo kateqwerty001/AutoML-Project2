@@ -28,12 +28,11 @@ class OptimizerAllModels:
         self.metric_to_eval = metric_to_eval # Metric according to which the evaluation will be performed
 
         # Split the dataset into features (X) and target (y)
-        self.X = dataset.drop(columns=['target'])  # Assumes 'target' column is the label column
         self.y = dataset['target']  # Assumes 'target' column is the label
+        self.X = dataset.drop(columns=['target']) # Drop the target column in the training set
 
-        self.X_train = self.X
-        self.y_train = self.y
-
+        self.X_train = self.X.copy()
+        self.y_train = self.y.copy()
 
         # Placeholder for hyperparameters and their metrics for all models
 
