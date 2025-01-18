@@ -8,11 +8,24 @@ Classify2TeX is an all-in-one automated machine learning tool for binary classif
 
 Classify2TeX simplifies data preparation with a fully automated preprocessing pipeline:
 
-•	Handles Missing Data: Efficiently imputes missing values.
+•	Extracts Date Components: Splits datetime features into separate day, month, and year components.
 
-•	Encodes Categorical Variables: Ensures compatibility with machine learning models.
+•	Removes Redundant Features: Eliminates unsupported or uninformative columns and those with excessive missing values.
 
-•	Train-Test Splitting: Automatically partitions data with configurable test sizes.
+•	Handles Missing Data: Imputes missing values based on feature type (mode for categorical, median for numerical).
+
+•	Manages Outliers: Detects and mitigates outliers in numerical features using the Z-score method.
+
+•	Encodes Categorical Variables: Applies one-hot or label encoding for compatibility with machine learning models.
+
+•	Transforms Boolean Features: Converts boolean features into integer representations.
+
+•	Encodes the Target Variable: Prepares the target column for machine learning.
+
+•	Removes Highly Correlated Features: Identifies and drops features with high correlation to reduce redundancy.
+
+•	Balances Classes: Addresses class imbalances with appropriate resampling techniques (oversampling, undersampling, or SMOTE).
+
 
 ## 2. Comprehensive Model Optimization
 
