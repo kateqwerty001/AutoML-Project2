@@ -71,6 +71,7 @@ class Classify2TeX:
         return
     
     def build_best_decision_tree(self):
+        print("Below you can see how the best Decision Tree model takes decisions on each node.")
         explainer_dt = ExplainDecisionTree(self.optimizer.best_dt_instance)
         tree = explainer_dt.build_tree(self.optimizer.X_train, self.optimizer.y_train)
         return tree
