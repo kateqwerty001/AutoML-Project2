@@ -44,13 +44,27 @@ Generate high-quality reports:
 
 •	Seamless PDF Conversion: Produces ready-to-use reports in both PDF and Latex format.
 
-# Examples:
+# Examples
 
 See [this file] (tu trzeba dodac link do jakiegos folderu z example tylko nwm czy juz mamy taki folder jeden?)
 
 # Review of existing solutions
 
 See [this file](https://github.com/kateqwerty001/Classify2TeX/blob/main/review_of_existing_solutions.ipynb)
+
+# What makes Classify2Tex stand out?
+
+Comprehensive Reporting: Generates detailed reports in both LaTeX and PDF formats, perfect for scientific papers, professional documentation, or quick analysis needs.
+
+User-Friendly for All: Designed for both experienced machine learning practitioners and newcomers, ensuring ease of use without sacrificing depth.
+
+Scientific-Ready Outputs: LaTeX reports integrate seamlessly into academic workflows, providing polished, citation-ready content.
+
+Extensive Insights: Delivers solid information on preprocessing steps, model performance, and hyperparameter optimization, aiding in well-informed decision-making.
+
+Streamlined Model Selection: Simplifies choosing the best model for binary classification by presenting key metrics like ROC AUC, F1 score, and accuracy in a clear, accessible manner.
+
+Time-Saving Automation: Eliminates the need for manual preprocessing, optimization, and reporting, accelerating the workflow for all users.
 
 # Authors:
 
