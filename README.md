@@ -12,8 +12,6 @@ Classify2TeX simplifies data preparation with a fully automated preprocessing pi
 
 •	Encodes Categorical Variables: Ensures compatibility with machine learning models.
 
-•	Scales and Normalizes Features: Prepares data for optimal model performance.
-
 •	Train-Test Splitting: Automatically partitions data with configurable test sizes.
 
 ## 2. Comprehensive Model Optimization
