@@ -46,7 +46,7 @@ Generate high-quality reports:
 
 # Examples
 
-See [this file] (tu trzeba dodac link do jakiegos folderu z example tylko nwm czy juz mamy taki folder jeden?)
+See [this file](https://github.com/kateqwerty001/Classify2TeX/blob/main/tutorial_final.ipynb)
 
 # Review of existing solutions
 
