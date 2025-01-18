@@ -40,7 +40,7 @@ Generate high-quality reports:
 
 •	Model Insights: Details strengths, weaknesses, and optimal hyperparameters for each model.
 
-•	Visual Results: Incorporates graphs and tables for clear communication of findings.
+•	Visual Results: Incorporates graphs and tables with results for clear communication of findings.
 
 •	Seamless PDF Conversion: Produces ready-to-use reports in both PDF and Latex format.
 
