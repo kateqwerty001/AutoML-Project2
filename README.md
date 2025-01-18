@@ -44,3 +44,14 @@ Generate high-quality reports:
 
 •	Seamless PDF Conversion: Produces ready-to-use reports in both PDF and Latex format.
 
+# Examples:
+
+See [this file] (tu trzeba dodac link do jakiegos folderu z example tylko nwm czy juz mamy taki folder jeden?)
+
+# Authors:
+
+Katsiaryna Bokhan
+
+Dorota Rzewnicka
+
+Monika Jarosińska
