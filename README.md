@@ -48,6 +48,10 @@ Generate high-quality reports:
 
 See [this file] (tu trzeba dodac link do jakiegos folderu z example tylko nwm czy juz mamy taki folder jeden?)
 
+# Review of existing solutions
+
+See [this file](https://github.com/kateqwerty001/Classify2TeX/blob/main/review_of_existing_solutions.ipynb)
+
 # Authors:
 
 Katsiaryna Bokhan
