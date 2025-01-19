@@ -57,7 +57,9 @@ Generate high-quality reports:
 
 # Examples
 
-See [this file](https://github.com/kateqwerty001/Classify2TeX/blob/main/tutorial_final.ipynb)
+See [this file](https://github.com/kateqwerty001/Classify2TeX/blob/main/TUTORIAL.ipynb) - User Guide part explains on example how to use Classify2TeX.
+
+See [Results](https://github.com/kateqwerty001/Classify2TeX/tree/main/Results) folder for example of generated reports and folders on 4 different datasets.
 
 # Review of existing solutions
 
