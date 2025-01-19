@@ -12,6 +12,9 @@ from ..xai.explain_xgboost import ExplainXGBoost
 
 class ReportGenerator:
     def __init__(self, dataset, dataset_name, optimizer):
+        """
+        this class is responsible for generating the report in the pdf format
+        """
         self.doc = Document()
         self.dataset = pd.DataFrame(dataset)
         self.dataset_name = dataset_name
